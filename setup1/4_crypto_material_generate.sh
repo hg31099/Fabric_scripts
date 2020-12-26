@@ -8,7 +8,7 @@ crypto1(){
     rm -rf ../crypto-config/*
     docker-compose -f ./docker-compose.yaml down
     docker-compose -f ./docker-compose.yaml up -d
-    sleep 5
+    sleep 7
     ./create-certificate-with-ca.sh
     popd
     echo "crypto material created !"
@@ -19,7 +19,7 @@ crypto2(){
     rm -rf ../crypto-config/*
     docker-compose -f ./docker-compose.yaml down
     docker-compose -f ./docker-compose.yaml up -d
-    sleep 5
+    sleep 7
     ./create-certificate-with-ca.sh
     popd
     echo "crypto material created !"
@@ -30,7 +30,7 @@ crypto3(){
     rm -rf ../crypto-config/*
     docker-compose -f ./docker-compose.yaml down
     docker-compose -f ./docker-compose.yaml up -d
-    sleep 5
+    sleep 7
     ./create-certificate-with-ca.sh
     popd
     echo "crypto material created !"
@@ -41,7 +41,7 @@ crypto4(){
     rm -rf ../crypto-config/*
     docker-compose -f ./docker-compose.yaml down
     docker-compose -f ./docker-compose.yaml up -d
-    sleep 5
+    sleep 7
     ./create-certificate-with-ca.sh
     popd
     echo "crypto material created !"
