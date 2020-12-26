@@ -9,6 +9,6 @@ docker network rm artifacts_test
 
 docker swarm leave --force
 docker swarm init --advertise-addr $1
-docker swarm join-token manager > join_swarm.sh
+docker swarm join-token manager > manager_token.txt
 
 docker network create --attachable --driver overlay artifacts_test
