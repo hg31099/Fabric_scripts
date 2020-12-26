@@ -1,0 +1,225 @@
+Organizations:
+
+    - &OrdererOrg
+        Name: OrdererOrg
+        ID: OrdererMSP
+        MSPDir: ../../setup1/vm4/crypto-config/ordererOrganizations/example.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('OrdererMSP.admin')"
+
+    - &SeedsAssociation
+        Name: SeedsAssociationMSP
+        ID: SeedsAssociationMSP
+
+        MSPDir: ../../setup1/vm1/crypto-config/peerOrganizations/seedsAssociation.example.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('SeedsAssociationMSP.admin', 'SeedsAssociationMSP.peer', 'SeedsAssociationMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('SeedsAssociationMSP.admin', 'SeedsAssociationMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('SeedsAssociationMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('SeedsAssociationMSP.peer')"
+
+        AnchorPeers:
+            - Host: peer0.seedsAssociation.example.com
+              Port: 7051
+
+    - &FarmersAssociation
+        Name: FarmersAssociationMSP
+
+        ID: FarmersAssociationMSP
+
+        MSPDir: ../../setup1/vm2/crypto-config/peerOrganizations/farmersAssociation.example.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('FarmersAssociationMSP.admin', 'FarmersAssociationMSP.peer', 'FarmersAssociationMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('FarmersAssociationMSP.admin', 'FarmersAssociationMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('FarmersAssociationMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('FarmersAssociationMSP.peer')"
+
+        AnchorPeers:
+            - Host: peer0.farmersAssociation.example.com
+              Port: 9051
+
+    - &MerchantsAssociation
+        Name: MerchantsAssociationMSP
+
+        ID: MerchantsAssociationMSP
+
+        MSPDir: ../../setup1/vm3/crypto-config/peerOrganizations/merchantsAssociation.example.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('MerchantsAssociationMSP.admin', 'MerchantsAssociationMSP.peer', 'MerchantsAssociationMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('MerchantsAssociationMSP.admin', 'MerchantsAssociationMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('MerchantsAssociationMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('MerchantsAssociationMSP.peer')"
+
+        AnchorPeers:
+            - Host: peer0.merchantsAssociation.example.com
+              Port: 11051
+
+Capabilities:
+    Channel: &ChannelCapabilities
+        V2_0: true
+
+    Orderer: &OrdererCapabilities
+        V2_0: true
+
+    Application: &ApplicationCapabilities
+        V2_0: true
+
+Application: &ApplicationDefaults
+
+    Organizations:
+
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        LifecycleEndorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+        Endorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+
+    OrdererType: etcdraft
+
+    EtcdRaft:
+        Consenters:
+        - Host: orderer.example.com
+          Port: 7050
+          ClientTLSCert: ../../setup1/vm4/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+          ServerTLSCert: ../../setup1/vm4/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+    Addresses:
+        - orderer.example.com:7050
+
+    BatchTimeout: 2s
+    BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+
+    Organizations:
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+
+Channel: &ChannelDefaults
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+
+    Capabilities:
+        <<: *ChannelCapabilities
+
+Profiles:
+
+    BasicChannel:
+        Consortium: SampleConsortium
+        <<: *ChannelDefaults
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *SeedsAssociation
+                - *FarmersAssociation
+                - *MerchantsAssociation
+            Capabilities:
+                <<: *ApplicationCapabilities
+
+    OrdererGenesis:
+        <<: *ChannelDefaults
+        Capabilities:
+            <<: *ChannelCapabilities
+        Orderer:
+            <<: *OrdererDefaults
+            OrdererType: etcdraft
+            EtcdRaft:
+                Consenters:
+                - Host: orderer.example.com
+                  Port: 7050
+                  ClientTLSCert: ../../setup1/vm4/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+                  ServerTLSCert: ../../setup1/vm4/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+                - Host: orderer2.example.com
+                  Port: 8050
+                  ClientTLSCert: ../../setup1/vm4/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+                  ServerTLSCert: ../../setup1/vm4/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+                - Host: orderer3.example.com
+                  Port: 9050
+                  ClientTLSCert: ../../setup1/vm4/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+                  ServerTLSCert: ../../setup1/vm4/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+            Addresses:
+                - orderer.example.com:7050
+                - orderer2.example.com:8050
+                - orderer3.example.com:9050
+
+            Organizations:
+            - *OrdererOrg
+            Capabilities:
+                <<: *OrdererCapabilities
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                - *SeedsAssociation
+                - *FarmersAssociation
+                - *MerchantsAssociation

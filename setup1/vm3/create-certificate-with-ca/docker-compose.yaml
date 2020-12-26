@@ -1,0 +1,22 @@
+version: '2'
+
+networks:
+  test:
+
+services:
+  ca_merchantsAssociation:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.merchantsAssociation.example.com
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=10054
+    ports:
+      - "10054:10054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ./fabric-ca/merchantsAssociation:/etc/hyperledger/fabric-ca-server
+    container_name: ca.merchantsAssociation.example.com
+    hostname: ca.merchantsAssociation.example.com
+    networks:
+      - test
