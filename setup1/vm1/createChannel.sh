@@ -18,7 +18,7 @@ setGlobalsForPeer1SeedsAssociation(){
     export CORE_PEER_MSPCONFIGPATH=${PWD}/crypto-config/peerOrganizations/seedsAssociation.example.com/users/Admin@seedsAssociation.example.com/msp
     export CORE_PEER_ADDRESS=localhost:8051
 }
-
+echo $1
 createChannel(){
     rm -rf ./channel-artifacts/*
     setGlobalsForPeer0SeedsAssociation
