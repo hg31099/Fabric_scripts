@@ -1,13 +1,13 @@
 export CORE_PEER_TLS_ENABLED=true
 export ORDERER_CA=${PWD}/../vm4/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-export PEER0_ORG3_CA=${PWD}/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer0.merchantsAssociation.example.com/tls/ca.crt
+export PEER0_MERCHANTSASSOCIATION_CA=${PWD}/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer0.merchantsAssociation.example.com/tls/ca.crt
 export FABRIC_CFG_PATH=${PWD}/../../artifacts/channel/config/
 
 export CHANNEL_NAME=mychannel
 
 setGlobalsForPeer0MerchantsAssociation() {
     export CORE_PEER_LOCALMSPID="MerchantsAssociationMSP"
-    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG3_CA
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_MERCHANTSASSOCIATION_CA
     export CORE_PEER_MSPCONFIGPATH=${PWD}/crypto-config/peerOrganizations/merchantsAssociation.example.com/users/Admin@merchantsAssociation.example.com/msp
     export CORE_PEER_ADDRESS=localhost:11051
 
@@ -15,7 +15,7 @@ setGlobalsForPeer0MerchantsAssociation() {
 
 setGlobalsForPeer1MerchantsAssociation() {
     export CORE_PEER_LOCALMSPID="MerchantsAssociationMSP"
-    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG3_CA
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_MERCHANTSASSOCIATION_CA
     export CORE_PEER_MSPCONFIGPATH=${PWD}/crypto-config/peerOrganizations/merchantsAssociation.example.com/users/Admin@merchantsAssociation.example.com/msp
     export CORE_PEER_ADDRESS=localhost:12051
 
@@ -56,6 +56,6 @@ updateAnchorPeers() {
 
 # updateAnchorPeers
 
-fetchChannelBlock
-joinChannel
-updateAnchorPeers
+fetchChannelBlock $1
+joinChannel $1
+updateAnchorPeers $1
