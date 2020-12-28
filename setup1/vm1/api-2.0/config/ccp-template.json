@@ -30,7 +30,7 @@
                 "pem": "${PEERPEM}"
             },
             "grpcOptions": {
-                "ssl-target-name-override": "peer0.org${SORG}.example.com",
+                "ssl-target-name-override": "peer0.${SORG}.example.com",
                 "hostnameOverride": "peer0.${SORG}.example.com"
             }
         },

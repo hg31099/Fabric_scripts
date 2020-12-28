@@ -49,7 +49,7 @@ const getWalletPath = async (org) => {
 
 
 const getAffiliation = async (org) => {
-    return org == "SeedsAssociation" ? 'seedsAssociation.department1' : 'farmersAssociation.department1'
+    return org == "SeedsAssociation" ? 'seedsassociation.department1' : 'farmersAssociation.department1'
 }
 
 const getRegisteredUser = async (username, userOrg, isJson) => {
@@ -88,7 +88,7 @@ const getRegisteredUser = async (username, userOrg, isJson) => {
     try {
         if (username == "superuser") {
             // Register the user, enroll the user, and import the new identity into the wallet.
-            secret = await ca.register({ affiliation: 'seedsAssociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'admin', ecert: true }] }, adminUser);
+            secret = await ca.register({ affiliation: 'seedsassociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'admin', ecert: true }] }, adminUser);
 
         } else {
             secret = await ca.register({ affiliation: await getAffiliation(userOrg), enrollmentID: username, role: 'client' }, adminUser);
