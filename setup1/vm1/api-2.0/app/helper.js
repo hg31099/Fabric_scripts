@@ -221,6 +221,7 @@ const enrollAdmin = async (org, ccp) => {
 }
 
 const registerAndGerSecret = async (username, userOrg) => {
+    console.log("hey i am here 0");
     let ccp = await getCCP(userOrg)
 
     const caURL = await getCaUrl(userOrg, ccp)
@@ -239,7 +240,7 @@ const registerAndGerSecret = async (username, userOrg) => {
         };
         return response
     }
-
+    console.log("hey i am here 3");
     // Check to see if we've already enrolled the admin user.
     let adminIdentity = await wallet.get('admin');
     if (!adminIdentity) {
@@ -254,6 +255,7 @@ const registerAndGerSecret = async (username, userOrg) => {
     const adminUser = await provider.getUserContext(adminIdentity, 'admin');
     let secret;
     try {
+        console.log("hey i am here 2");
         // Register the user, enroll the user, and import the new identity into the wallet.
         secret = await ca.register({ affiliation: await getAffiliation(userOrg), enrollmentID: username, role: 'client' }, adminUser);
         // const secret = await ca.register({ affiliation: 'seedsAssociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'approver', ecert: true }] }, adminUser);

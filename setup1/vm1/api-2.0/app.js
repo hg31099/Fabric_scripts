@@ -42,8 +42,10 @@ logger.level = 'debug';
 app.use((req, res, next) => {
     logger.debug('New req for %s', req.originalUrl);
     if (req.originalUrl.indexOf('/users') >= 0 || req.originalUrl.indexOf('/users/login') >= 0 || req.originalUrl.indexOf('/register') >= 0) {
+        logger.debug('use if ke andar');
         return next();
     }
+    logger.debug('use if ke bahar');
     var token = req.token;
     jwt.verify(token, app.get('secret'), (err, decoded) => {
         if (err) {
@@ -67,6 +69,7 @@ app.use((req, res, next) => {
 var server = http.createServer(app).listen(port, function () { console.log(`Server started on ${port}`) });
 logger.info('****************** SERVER STARTED ************************');
 logger.info('***************  http://%s:%s  ******************', host, port);
+logger.info('***************  http://%s:%s  hheheh', host, port);
 server.timeout = 240000;
 
 function getErrorMessage(field) {
@@ -81,6 +84,8 @@ function getErrorMessage(field) {
 app.post('/users', async function (req, res) {
     var username = req.body.username;
     var orgName = req.body.orgName;
+    logger.debug('in register function');
+    console.log('in console reguster function');
     logger.debug('End point : /users');
     logger.debug('User name : ' + username);
     logger.debug('Org name  : ' + orgName);
@@ -115,6 +120,7 @@ app.post('/users', async function (req, res) {
 
 // Register and enroll user
 app.post('/register', async function (req, res) {
+    
     var username = req.body.username;
     var orgName = req.body.orgName;
     logger.debug('End point : /users');

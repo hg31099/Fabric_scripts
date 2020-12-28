@@ -12,6 +12,6 @@ docker swarm init --advertise-addr $1
 sleep 2
 docker swarm join-token manager > manager_token.txt
 
-sleep 1
+sleep 3
 
 docker network create --attachable --driver overlay artifacts_test

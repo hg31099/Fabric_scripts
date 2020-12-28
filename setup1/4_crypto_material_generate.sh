@@ -17,7 +17,7 @@ crypto2(){
     echo "Cryto material creating ..."
     pushd ./vm2/create-certificate-with-ca
     rm -rf ../crypto-config/*
-    docker-compose -f ./docker-compose.yaml down
+    # docker-compose -f ./docker-compose.yaml down
     docker-compose -f ./docker-compose.yaml up -d
     sleep 7
     ./create-certificate-with-ca.sh
@@ -28,7 +28,7 @@ crypto3(){
     echo "Cryto material creating ..."
     pushd ./vm3/create-certificate-with-ca
     rm -rf ../crypto-config/*
-    docker-compose -f ./docker-compose.yaml down
+    # docker-compose -f ./docker-compose.yaml down
     docker-compose -f ./docker-compose.yaml up -d
     sleep 7
     ./create-certificate-with-ca.sh
@@ -39,7 +39,7 @@ crypto4(){
     echo "Cryto material creating for orderer..."
     pushd ./vm4/create-certificate-with-ca
     rm -rf ../crypto-config/*
-    docker-compose -f ./docker-compose.yaml down
+    # docker-compose -f ./docker-compose.yaml down
     docker-compose -f ./docker-compose.yaml up -d
     sleep 7
     ./create-certificate-with-ca.sh
