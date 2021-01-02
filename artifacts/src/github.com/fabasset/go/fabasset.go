@@ -18,16 +18,16 @@ type SmartContract struct {
 }
 
 // Asset :  Define the asset structure, with 4 properties.  Structure tags are used by encoding/json library
-type asset struct {
+type Asset struct {
 	Item   string `json:"item"`
 	Subtype1   string `json:"subtype1"`
 	Subtype2   string `json:"subtype2"`
-	Quantity   int `json:"quantity"`
+	Quantity   string `json:"quantity"`
 	QuantityUnit  string `json:"quantityunit"`
 	Type   string `json:"type"`
 	Organic   string `json:"organic"`
 	Owner   string `json:"owner"`
-	CreationTimestamp   time.Time  `json:"creationtimestamp"`
+	CreationTimestamp   string  `json:"creationtimestamp"`
 }
 
 type assetPrivateDetails struct {
@@ -66,8 +66,6 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.queryAssetsByOwner(APIstub, args)
 	case "restictedMethod":
 		return s.restictedMethod(APIstub, args)
-	case "test":
-		return s.test(APIstub, args)
 	case "createPrivateAsset":
 		return s.createPrivateAsset(APIstub, args)
 	case "readPrivateAsset":
@@ -158,7 +156,7 @@ func (s *SmartContract) readAssetPrivateDetails(APIstub shim.ChaincodeStubInterf
 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	assets := []Asset{
-		Asset{Item:"Wheat", Subtype1: "Sharbati", Subtype2: "", Quantity: "50",  QuantityUnit: "kg",  Type: "Grain",  Organic: true, Owner:"Chaincoders", CreationTimestamp: time.now(),}
+		Asset{Item:"Wheat", Subtype1: "Sharbati", Subtype2: "", Quantity: "50",  QuantityUnit: "kg",  Type: "Grain",  Organic: "true", Owner:"Chaincoders", CreationTimestamp: "2012021"},
 	}
 
 	i := 0
@@ -176,12 +174,12 @@ func (s *SmartContract) createPrivateAsset(APIstub shim.ChaincodeStubInterface, 
 		Item   string `json:"item"`
 		Subtype1   string `json:"subtype1"`
 		Subtype2   string `json:"subtype2"`
-		Quantity   int `json:"quantity"`
+		Quantity   string `json:"quantity"`
 		QuantityUnit  string `json:"quantityunit"`
 		Type   string `json:"type"`
 		Organic   string `json:"organic"`
 		Owner   string `json:"owner"`
-		CreationTimestamp   time.Time  `json:"creationtimestamp"`
+		CreationTimestamp   string  `json:"creationtimestamp"`
 		Price string `json:"price"`
 		Key   string `json:"key"`
 	}
@@ -208,7 +206,7 @@ func (s *SmartContract) createPrivateAsset(APIstub shim.ChaincodeStubInterface, 
 
 	logger.Infof("222")
 
-	var assetTransientInput assetInput
+	var assetInput assetTransientInput
 	err = json.Unmarshal(assetDataAsBytes, &assetInput)
 	if err != nil {
 		return shim.Error("44444 -Failed to decode JSON of: " + string(assetDataAsBytes) + "Error is : " + err.Error())
@@ -253,7 +251,7 @@ func (s *SmartContract) createPrivateAsset(APIstub shim.ChaincodeStubInterface, 
 	logger.Infof("555")
 
 	// var asset = Asset{Make: assetInput.Make, Model: assetInput.Model, Colour: assetInput.Color, Owner: assetInput.Owner}
-	var asset := assetInput
+	var asset = assetInput
 	assetAsBytes, err = json.Marshal(asset)
 	if err != nil {
 		return shim.Error(err.Error())
@@ -311,7 +309,7 @@ func (s *SmartContract) updatePrivateData(APIstub shim.ChaincodeStubInterface, a
 
 	logger.Infof("upd222")
 
-	var assetTransientInput assetInput
+	var assetInput assetTransientInput
 	err = json.Unmarshal(assetDataAsBytes, &assetInput)
 	if err != nil {
 		return shim.Error("44444 -Failed to decode JSON of: " + string(assetDataAsBytes) + "Error is : " + err.Error())
@@ -342,7 +340,7 @@ func (s *SmartContract) createAsset(APIstub shim.ChaincodeStubInterface, args []
 		return shim.Error("Incorrect number of arguments. Expecting 10")
 	}
 
-	var asset = Asset{Item:args[1], Subtype1: args[2], Subtype2: args[3], Quantity: args[4],  QuantityUnit: args[5],  Type: args[6],  Organic: args[7], Owner: args[8], CreationTimestamp: args[9],}
+	var asset = Asset{Item:args[1], Subtype1: args[2], Subtype2: args[3], Quantity: args[4],  QuantityUnit: args[5],  Type: args[6],  Organic: args[7], Owner: args[8], CreationTimestamp: args[9]}
 
 	assetAsBytes, _ := json.Marshal(asset)
 	APIstub.PutState(args[0], assetAsBytes)

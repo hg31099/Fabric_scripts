@@ -27,8 +27,8 @@ peer chaincode invoke -o orderer.example.com:7050 \
 --peerAddresses peer0.seedsAssociation.example.com:7051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/seedsAssociation.example.com/peers/peer0.seedsAssociation.example.com/tls/ca.crt \
 --peerAddresses peer0.farmersAssociation.example.com:9051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt \
 --peerAddresses peer0.merchantsAssociation.example.com:11051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer0.merchantsAssociation.example.com/tls/ca.crt \
--c '{"function": "createCar","Args":["ps1", "Potato", "seeds", "organic", "Farmer1"]}'
+-c '{"function": "createAsset","Args":["r1", "Rice", "Basmati", "hyderabadi", "100","kg", "grain", "true","farmer1","02012021"]}'
 
 sleep 3
 
-peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "queryCar","Args":["ps1"]}'
+peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "queryAsset","Args":["r1"]}'
