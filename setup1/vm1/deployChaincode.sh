@@ -41,7 +41,7 @@ setGlobalsForPeer1SeedsAssociation() {
 
 presetup() {
     echo Vendoring Go dependencies ...
-    pushd ./../../artifacts/src/github.com/fabcar/go
+    pushd ./../../artifacts/src/github.com/fabasset/go
     GO111MODULE=on go mod vendor
     popd
     echo Finished vendoring Go dependencies
@@ -51,8 +51,8 @@ presetup() {
 CHANNEL_NAME="mychannel"
 CC_RUNTIME_LANGUAGE="golang"
 VERSION="1"
-CC_SRC_PATH="./../../artifacts/src/github.com/fabcar/go"
-CC_NAME="fabcar"
+CC_SRC_PATH="./../../artifacts/src/github.com/fabasset/go"
+CC_NAME="fabasset"
 
 packageChaincode() {
     rm -rf ${CC_NAME}.tar.gz
@@ -152,7 +152,7 @@ chaincodeInvokeInit() {
 chaincodeInvoke() {
     setGlobalsForPeer0SeedsAssociation
 
-    ## Create Car
+    ## Create Asset
     peer chaincode invoke -o localhost:7050 \
         --ordererTLSHostnameOverride orderer.example.com \
         --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
@@ -179,7 +179,7 @@ chaincodeInvoke() {
 chaincodeQuery() {
     setGlobalsForPeer0SeedsAssociation
 
-    # Query Car by Id
+    # Query Asset by Id
     peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "queryCar","Args":["ps1"]}'
  
 }

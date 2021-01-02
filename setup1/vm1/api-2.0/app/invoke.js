@@ -91,28 +91,28 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
         // }
         let result
         let message;
-        if (fcn === "createCar" || fcn === "createPrivateCarImplicitForSeedsAssociation"
-            || fcn == "createPrivateCarImplicitForFarmersAssociation") {
+        if (fcn === "createAsset" || fcn === "createPrivateAssetImplicitForSeedsAssociation"
+            || fcn == "createPrivateAssetImplicitForFarmersAssociation") {
             result = await contract.submitTransaction(fcn, args[0], args[1], args[2], args[3], args[4]);
-            message = `Successfully added the car asset with key ${args[0]}`
+            message = `Successfully added the asset asset with key ${args[0]}`
 
-        } else if (fcn === "changeCarOwner") {
+        } else if (fcn === "changeAssetOwner") {
             result = await contract.submitTransaction(fcn, args[0], args[1]);
-            message = `Successfully changed car owner with key ${args[0]}`
-        } else if (fcn == "createPrivateCar" || fcn == "updatePrivateData") {
+            message = `Successfully changed asset owner with key ${args[0]}`
+        } else if (fcn == "createPrivateAsset" || fcn == "updatePrivateData") {
             console.log(`Transient data is : ${transientData}`)
-            let carData = JSON.parse(transientData)
-            console.log(`car data is : ${JSON.stringify(carData)}`)
-            let key = Object.keys(carData)[0]
+            let assetData = JSON.parse(transientData)
+            console.log(`asset data is : ${JSON.stringify(assetData)}`)
+            let key = Object.keys(assetData)[0]
             const transientDataBuffer = {}
-            transientDataBuffer[key] = Buffer.from(JSON.stringify(carData.car))
+            transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset))
             result = await contract.createTransaction(fcn)
                 .setTransient(transientDataBuffer)
                 .submit()
             message = `Successfully submitted transient data`
         }
         else {
-            return `Invocation require either createCar or changeCarOwner as function but got ${fcn}`
+            return `Invocation require either createAsset or changeAssetOwner as function but got ${fcn}`
         }
         await gateway.disconnect();
 

@@ -26,7 +26,7 @@
 								"proposal_response_payload": {
 									"extension": {
 										"chaincode_id": {
-											"name": "fabcar",
+											"name": "fabasset",
 											"path": "",
 											"version": "1"
 										},
@@ -47,7 +47,7 @@
 														"range_queries_info": [],
 														"reads": [
 															{
-																"key": "namespaces/fields/fabcar/Sequence",
+																"key": "namespaces/fields/fabasset/Sequence",
 																"version": {
 																	"block_num": "5",
 																	"tx_num": "0"
@@ -59,7 +59,7 @@
 												},
 												{
 													"collection_hashed_rwset": [],
-													"namespace": "fabcar",
+													"namespace": "fabasset",
 													"rwset": {
 														"metadata_writes": [],
 														"range_queries_info": [],
@@ -97,7 +97,7 @@
 								"input": {
 									"chaincode_spec": {
 										"chaincode_id": {
-											"name": "fabcar",
+											"name": "fabasset",
 											"path": "",
 											"version": ""
 										},
@@ -128,7 +128,7 @@
 					"epoch": "0",
 					"extension": {
 						"chaincode_id": {
-							"name": "fabcar",
+							"name": "fabasset",
 							"path": "",
 							"version": ""
 						}

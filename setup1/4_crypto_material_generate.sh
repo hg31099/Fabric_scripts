@@ -6,7 +6,7 @@ crypto1(){
     echo "Cryto material creating ..."
     pushd ./vm1/create-certificate-with-ca
     rm -rf ../crypto-config/*
-    docker-compose -f ./docker-compose.yaml down
+    # docker-compose -f ./docker-compose.yaml down
     docker-compose -f ./docker-compose.yaml up -d
     sleep 7
     ./create-certificate-with-ca.sh

@@ -42,8 +42,8 @@ setGlobalsForPeer1SeedsAssociation() {
 CHANNEL_NAME="mychannel"
 CC_RUNTIME_LANGUAGE="golang"
 VERSION="1"
-CC_SRC_PATH="./../../artifacts/src/github.com/fabcar/go"
-CC_NAME="fabcar"
+CC_SRC_PATH="./../../artifacts/src/github.com/fabasset/go"
+CC_NAME="fabasset"
 
 
 
