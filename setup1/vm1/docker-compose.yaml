@@ -55,6 +55,7 @@ services:
       service: peer-base
     environment:
       - FABRIC_LOGGING_SPEC=DEBUG
+      
       - ORDERER_GENERAL_LOGLEVEL=DEBUG
       - CORE_PEER_LOCALMSPID=SeedsAssociationMSP
 

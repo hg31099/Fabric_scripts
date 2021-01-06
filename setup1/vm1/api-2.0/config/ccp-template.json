@@ -25,7 +25,7 @@
     },
     "peers": {
         "peer0.${SORG}.example.com": {
-            "url": "grpcs://peer0.seedsAssociation.example.com:${P0PORT}",
+            "url": "grpcs://${IP}:${P0PORT}",
             "tlsCACerts": {
                 "pem": "${PEERPEM}"
             },
@@ -35,7 +35,7 @@
             }
         },
 	"peer1.${SORG}.example.com": {
-            "url": "grpcs://peer1.seedsAssociation.example.com:${P0PORT1}",
+            "url": "grpcs://${IP}:${P0PORT1}",
             "tlsCACerts": {
                 "pem": "${PEERPEM1}"
             },
@@ -49,7 +49,7 @@
     },
     "certificateAuthorities": {
         "ca.${SORG}.example.com": {
-            "url": "https://ca.seedsAssociation.example.com:${CAPORT}",
+            "url": "https://${IP}:${CAPORT}",
             "caName": "ca.${SORG}.example.com",
             "tlsCACerts": {
                 "pem": "${CAPEM}"

@@ -1,0 +1,62 @@
+{
+    "name": "first-network-merchantsAssociation",
+    "version": "1.0.0",
+    "client": {
+        "organization": "MerchantsAssociation",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "MerchantsAssociation": {
+            "mspid": "MerchantsAssociationMSP",
+            "peers": [
+                "peer0.merchantsAssociation.example.com",
+                "peer1.merchantsAssociation.example.com"
+            ],
+            "certificateAuthorities": [
+                "ca.merchantsAssociation.example.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.merchantsAssociation.example.com": {
+            "url": "grpcs://52.188.166.210:11051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUEWhWTNWB0B1YTxCZ0XAgWdMHY/0wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNjA2MDYwMFoXDTM1MTIyMzA2MDYwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELBBQuNl+rLCDYd2N1OdkrjoU\ncpaZMyoWD5ydI79ZGiW2hkadJF61YrOTAFnrMn3XXmvA/HocUKH99lcr13skbaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMdNdca1HlzIqTdjDMYdEiTta+MvMAoGCCqGSM49BAMCA0gAMEUCIQDKZL/Fa+sQ\nVxkG/E20dJwSRllnC2wktSOGYr8vDV9hsAIgPyc2bacCYB4Tcu/W483A4QTpCdmx\nwFV7hBOe1Khqncs=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.merchantsAssociation.example.com",
+                "hostnameOverride": "peer0.merchantsAssociation.example.com"
+            }
+        },
+	"peer1.merchantsAssociation.example.com": {
+            "url": "grpcs://52.188.166.210:12051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUEWhWTNWB0B1YTxCZ0XAgWdMHY/0wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNjA2MDYwMFoXDTM1MTIyMzA2MDYwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELBBQuNl+rLCDYd2N1OdkrjoU\ncpaZMyoWD5ydI79ZGiW2hkadJF61YrOTAFnrMn3XXmvA/HocUKH99lcr13skbaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMdNdca1HlzIqTdjDMYdEiTta+MvMAoGCCqGSM49BAMCA0gAMEUCIQDKZL/Fa+sQ\nVxkG/E20dJwSRllnC2wktSOGYr8vDV9hsAIgPyc2bacCYB4Tcu/W483A4QTpCdmx\nwFV7hBOe1Khqncs=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.merchantsAssociation.example.com",
+                "hostnameOverride": "peer1.merchantsAssociation.example.com"
+            }
+        }
+
+	
+    },
+    "certificateAuthorities": {
+        "ca.merchantsAssociation.example.com": {
+            "url": "https://52.188.166.210:10054",
+            "caName": "ca.merchantsAssociation.example.com",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUEWhWTNWB0B1YTxCZ0XAgWdMHY/0wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNjA2MDYwMFoXDTM1MTIyMzA2MDYwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELBBQuNl+rLCDYd2N1OdkrjoU\ncpaZMyoWD5ydI79ZGiW2hkadJF61YrOTAFnrMn3XXmvA/HocUKH99lcr13skbaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMdNdca1HlzIqTdjDMYdEiTta+MvMAoGCCqGSM49BAMCA0gAMEUCIQDKZL/Fa+sQ\nVxkG/E20dJwSRllnC2wktSOGYr8vDV9hsAIgPyc2bacCYB4Tcu/W483A4QTpCdmx\nwFV7hBOe1Khqncs=\n-----END CERTIFICATE-----\n"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}

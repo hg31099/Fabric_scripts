@@ -25,7 +25,7 @@
     },
     "peers": {
         "peer0.seedsAssociation.example.com": {
-            "url": "grpcs://peer0.seedsAssociation.example.com:7051",
+            "url": "grpcs://168.62.175.188:7051",
             "tlsCACerts": {
                 "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUBc7C7vXl/eelTZLwiFd2Cx3PlRYwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNTEyNDEwMFoXDTM1MTIyMjEyNDEwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEcACRWi7uU4Ej0KyhdcRnBsE/\naSPyO2MQ+WplPaUd2we8NlUqeMGR7y4uCyk7jCFNgZdp15Z6LL+VTfmkLHBs1qNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMQ3czhzAEXH+s9Y2EMSv4kUBjpEMAoGCCqGSM49BAMCA0gAMEUCIQD7uboKXvW1\n++h5PBmBZrrQMpX+CGS8rNEXscXmiHOrbwIgbLn9Maq1yYGrMIQJiJkScM0U3d68\n9wLybdfmDOAG30Q=\n-----END CERTIFICATE-----\n"
             },
@@ -35,7 +35,7 @@
             }
         },
 	"peer1.seedsAssociation.example.com": {
-            "url": "grpcs://peer1.seedsAssociation.example.com:8051",
+            "url": "grpcs://168.62.175.188:8051",
             "tlsCACerts": {
                 "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUBc7C7vXl/eelTZLwiFd2Cx3PlRYwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNTEyNDEwMFoXDTM1MTIyMjEyNDEwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEcACRWi7uU4Ej0KyhdcRnBsE/\naSPyO2MQ+WplPaUd2we8NlUqeMGR7y4uCyk7jCFNgZdp15Z6LL+VTfmkLHBs1qNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMQ3czhzAEXH+s9Y2EMSv4kUBjpEMAoGCCqGSM49BAMCA0gAMEUCIQD7uboKXvW1\n++h5PBmBZrrQMpX+CGS8rNEXscXmiHOrbwIgbLn9Maq1yYGrMIQJiJkScM0U3d68\n9wLybdfmDOAG30Q=\n-----END CERTIFICATE-----\n"
             },
@@ -49,7 +49,7 @@
     },
     "certificateAuthorities": {
         "ca.seedsAssociation.example.com": {
-            "url": "https://ca.seedsAssociation.example.com:7054",
+            "url": "https://168.62.175.188:7054",
             "caName": "ca.seedsAssociation.example.com",
             "tlsCACerts": {
                 "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUBc7C7vXl/eelTZLwiFd2Cx3PlRYwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNTEyNDEwMFoXDTM1MTIyMjEyNDEwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEcACRWi7uU4Ej0KyhdcRnBsE/\naSPyO2MQ+WplPaUd2we8NlUqeMGR7y4uCyk7jCFNgZdp15Z6LL+VTfmkLHBs1qNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMQ3czhzAEXH+s9Y2EMSv4kUBjpEMAoGCCqGSM49BAMCA0gAMEUCIQD7uboKXvW1\n++h5PBmBZrrQMpX+CGS8rNEXscXmiHOrbwIgbLn9Maq1yYGrMIQJiJkScM0U3d68\n9wLybdfmDOAG30Q=\n-----END CERTIFICATE-----\n"

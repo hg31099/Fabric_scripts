@@ -248,6 +248,8 @@ affiliations:
       - department2
    farmersassociation:
       - department1
+   merchantsassociation:
+      - department1
 
 #############################################################################
 #  Signing section

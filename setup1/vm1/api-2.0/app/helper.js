@@ -14,7 +14,11 @@ const getCCP = async (org) => {
 
     } else if (org == "FarmersAssociation") {
         ccpPath = path.resolve(__dirname, '..', 'config', 'connection-farmersAssociation.json');
-    } else
+    }
+    else if (org == "MerchantsAssociation") {
+        ccpPath = path.resolve(__dirname, '..', 'config', 'connection-merchantsAssociation.json');
+    }
+    else
         return null
     const ccpJSON = fs.readFileSync(ccpPath, 'utf8')
     const ccp = JSON.parse(ccpJSON);
@@ -28,6 +32,8 @@ const getCaUrl = async (org, ccp) => {
 
     } else if (org == "FarmersAssociation") {
         caURL = ccp.certificateAuthorities['ca.farmersAssociation.example.com'].url;
+    } else if (org == "MerchantsAssociation") {
+        caURL = ccp.certificateAuthorities['ca.merchantsAssociation.example.com'].url;
     } else
         return null
     return caURL
@@ -41,6 +47,8 @@ const getWalletPath = async (org) => {
 
     } else if (org == "FarmersAssociation") {
         walletPath = path.join(process.cwd(), 'farmersAssociation-wallet');
+    } else if (org == "MerchantsAssociation") {
+        walletPath = path.join(process.cwd(), 'merchantsAssociation-wallet');
     } else
         return null
     return walletPath
@@ -49,7 +57,19 @@ const getWalletPath = async (org) => {
 
 
 const getAffiliation = async (org) => {
-    return org == "SeedsAssociation" ? 'seedsassociation.department1' : 'farmersAssociation.department1'
+    if(org == "SeedsAssociation")
+    {
+        return 'seedsassociation.department1';
+    }
+    else if(org == "FarmersAssociation")
+    {
+        return 'farmersassociation.department1';
+    }
+    else if(org == "MerchantsAssociation")
+    {
+        return 'merchantsassociation.department1';
+    }
+    // return org == "SeedsAssociation" ? 'seedsassociation.department1' : 'farmersassociation.department1'
 }
 
 const getRegisteredUser = async (username, userOrg, isJson) => {
@@ -88,7 +108,15 @@ const getRegisteredUser = async (username, userOrg, isJson) => {
     try {
         if (username == "superuser") {
             // Register the user, enroll the user, and import the new identity into the wallet.
-            secret = await ca.register({ affiliation: 'seedsassociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'admin', ecert: true }] }, adminUser);
+            if (userOrg== "seedsAssociation"){
+                secret = await ca.register({ affiliation: 'seedsassociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'admin', ecert: true }] }, adminUser);
+            }
+            else if (userOrg== "farmersAssociation"){
+                secret = await ca.register({ affiliation: 'farmersassociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'admin', ecert: true }] }, adminUser);
+            }
+            else if (userOrg== "merchantsAssociation"){
+                secret = await ca.register({ affiliation: 'merchantsassociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'admin', ecert: true }] }, adminUser);
+            }
 
         } else {
             secret = await ca.register({ affiliation: await getAffiliation(userOrg), enrollmentID: username, role: 'client' }, adminUser);
@@ -129,6 +157,16 @@ const getRegisteredUser = async (username, userOrg, isJson) => {
             type: 'X.509',
         };
     }
+    else if (userOrg == "MerchantsAssociation") {
+        x509Identity = {
+            credentials: {
+                certificate: enrollment.certificate,
+                privateKey: enrollment.key.toBytes(),
+            },
+            mspId: 'MerchantsAssociationMSP',
+            type: 'X.509',
+        };
+    }
 
     await wallet.put(username, x509Identity);
     console.log(`Successfully registered and enrolled admin user ${username} and imported it into the wallet`);
@@ -161,10 +199,11 @@ const getCaInfo = async (org, ccp) => {
 
     } else if (org == "FarmersAssociation") {
         caInfo = ccp.certificateAuthorities['ca.farmersAssociation.example.com'];
+    } else if (org == "MerchantsAssociation") {
+        caInfo = ccp.certificateAuthorities['ca.merchantsAssociation.example.com'];
     } else
         return null
     return caInfo
-
 }
 
 const enrollAdmin = async (org, ccp) => {
@@ -208,6 +247,15 @@ const enrollAdmin = async (org, ccp) => {
                     privateKey: enrollment.key.toBytes(),
                 },
                 mspId: 'FarmersAssociationMSP',
+                type: 'X.509',
+            };
+        } else if (org == "MerchantsAssociation") {
+            x509Identity = {
+                credentials: {
+                    certificate: enrollment.certificate,
+                    privateKey: enrollment.key.toBytes(),
+                },
+                mspId: 'MerchantsAssociationMSP',
                 type: 'X.509',
             };
         }
