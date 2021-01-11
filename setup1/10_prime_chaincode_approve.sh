@@ -9,6 +9,10 @@ chain2(){
     ./installAndApproveChaincode.sh $2
     popd
     echo "Chaincode installed and approved in 2"
+    pushd ./vm2/create-certificate-with-ca
+    # docker-compose -f ./docker-compose.yaml down
+    docker-compose -f ./docker-compose.yaml up -d
+    popd
 }
 chain3(){
     echo "chaincode approve channel 3 ..."
@@ -16,6 +20,10 @@ chain3(){
     ./installAndApproveChaincode.sh $2
     popd
     echo "Chaincode installed and approved in 3"
+    pushd ./vm3/create-certificate-with-ca
+    # docker-compose -f ./docker-compose.yaml down
+    docker-compose -f ./docker-compose.yaml up -d
+    popd
 }
 
 

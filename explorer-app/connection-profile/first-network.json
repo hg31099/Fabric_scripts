@@ -1,0 +1,57 @@
+{
+	"name": "first-network",
+	"version": "1.0.0",
+	"client": {
+		"tlsEnable": true,
+		"adminCredential": {
+			"id": "exploreradmin",
+			"password": "exploreradminpw"
+		},
+		"enableAuthentication": true,
+		"organization": "SeedsAssociationMSP",
+		"connection": {
+			"timeout": {
+				"peer": {
+					"endorser": "300"
+				},
+				"orderer": "300"
+			}
+		}
+	},
+	"channels": {
+		"mychannel": {
+			"peers": {
+				"peer0.seedsAssociation.example.com": {}
+			},
+			"connection": {
+				"timeout": {
+					"peer": {
+						"endorser": "6000",
+						"eventHub": "6000",
+						"eventReg": "6000"
+					}
+				}
+			}
+		}
+	},
+	"organizations": {
+		"SeedsAssociationMSP": {
+			"mspid": "SeedsAssociationMSP",
+			"adminPrivateKey": {
+				"path": "/tmp/crypto/peerOrganizations/seedsAssociation.example.com/users/Admin@seedsAssociation.example.com/msp/keystore/acad23f9e06a7543dd2e3f781688b4d1faa66beed2eab4ceeeac9b8cc7e18a01_sk"
+			},
+			"peers": ["peer0.seedsAssociation.example.com"],
+			"signedCert": {
+				"path": "/tmp/crypto/peerOrganizations/seedsAssociation.example.com/users/Admin@seedsAssociation.example.com/msp/signcerts/cert.pem"
+			}
+		}
+	},
+	"peers": {
+		"peer0.seedsAssociation.example.com": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/peerOrganizations/seedsAssociation.example.com/peers/peer0.seedsAssociation.example.com/tls/ca.crt"
+			},
+			"url": "grpcs://peer0.seedsAssociation.example.com:7051"
+		}
+	}
+}
