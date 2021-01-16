@@ -188,9 +188,9 @@ chaincodeQuery() {
 
 # Run this function if you add any new dependency in chaincode
 
-# presetup $1
-# packageChaincode $1
-# installChaincode $1
+presetup $1
+packageChaincode $1
+installChaincode $1
 queryInstalled $1
 approveForMySeedsAssociation $1
 # chaincodeQuery

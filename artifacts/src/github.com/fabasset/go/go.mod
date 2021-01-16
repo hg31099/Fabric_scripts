@@ -3,7 +3,7 @@ module github.com/fabasset/go
 go 1.13
 
 require (
-	github.com/golang/protobuf v1.3.2 // indirect
+	github.com/golang/protobuf v1.3.2
 	github.com/hyperledger/fabric v2.1.1+incompatible // indirect
 	// github.com/golang/protobuf v1.3.2
 	// github.com/hyperledger/fabric v2.1.1+incompatible
