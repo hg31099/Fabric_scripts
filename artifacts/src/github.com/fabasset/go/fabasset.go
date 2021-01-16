@@ -6,6 +6,7 @@
 	 "encoding/json"
 	 "fmt"
 	 "time"
+	 "log"
 	 "github.com/golang/protobuf/ptypes"
 	 "github.com/hyperledger/fabric-chaincode-go/pkg/statebased"
 	 "github.com/hyperledger/fabric-chaincode-go/shim"
@@ -714,4 +715,15 @@ func (s *SmartContract) QueryAssetHistory(ctx contractapi.TransactionContextInte
 	}
 
 	return results, nil
+}
+
+func main() {
+	chaincode, err := contractapi.NewChaincode(new(SmartContract))
+	if err != nil {
+		log.Panicf("Error create transfer asset chaincode: %v", err)
+	}
+
+	if err := chaincode.Start(); err != nil {
+		log.Panicf("Error starting asset chaincode: %v", err)
+	}
 }
