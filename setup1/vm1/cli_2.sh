@@ -27,13 +27,13 @@ peer chaincode invoke -o orderer.example.com:7050 \
 --cafile /etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
 -C $CHANNEL_NAME -n ${CC_NAME} \
 --peerAddresses peer0.seedsAssociation.example.com:7051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/seedsAssociation.example.com/peers/peer0.seedsAssociation.example.com/tls/ca.crt \
---peerAddresses peer0.merchantsAssociation.example.com:11051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer0.merchantsAssociation.example.com/tls/ca.crt \
---peerAddresses peer0.farmersAssociation.example.com:9051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt \
--c '{"function": "createAsset","Args":["r1", "Rice", "Basmati", "hyderabadi", "grain", "true","farmer1", "open to sell"]}' --transient "{\"asset_properties\":\"$ASSET_PROPERTIES\"}"
+-c '{"function": "CreateAsset","Args":["r1", "Rice", "Basmati", "hyderabadi", "grain", "true","farmer1", "open to sell"]}' --transient "{\"asset_properties\":\"$ASSET_PROPERTIES\"}"
+# --peerAddresses peer0.merchantsAssociation.example.com:11051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer0.merchantsAssociation.example.com/tls/ca.crt \
+# --peerAddresses peer0.farmersAssociation.example.com:9051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt \
 
 
 
 
 sleep 3
 
-peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "queryAsset","Args":["r1"]}'
+peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "ReadAsset","Args":["r1"]}'

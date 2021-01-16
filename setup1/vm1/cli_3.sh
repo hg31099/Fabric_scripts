@@ -6,7 +6,7 @@ export CHANNEL_NAME="mychannel"
 export CC_NAME="fabasset"
 export ORDERER_CA=/etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 export VERSION="1"
-export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer', MerchantsAssociationMSP.peer)"
+export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer', 'MerchantsAssociationMSP.peer')"
 
 peer chaincode upgrade -o orderer.example.com:7050 \
 --ordererTLSHostnameOverride orderer.example.com \
