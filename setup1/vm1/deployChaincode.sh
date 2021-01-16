@@ -4,7 +4,7 @@ export PEER0_SEEDSASSOCIATION_CA=${PWD}/crypto-config/peerOrganizations/seedsAss
 export PEER0_FARMERSASSOCIATION_CA=${PWD}/../vm2/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt
 export PEER0_MERCHANTSASSOCIATION_CA=${PWD}/../vm3/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer0.merchantsAssociation.example.com/tls/ca.crt
 export FABRIC_CFG_PATH=${PWD}/../../artifacts/channel/config/
-
+export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer','MerchantsAssociationMSP.peer')"
 
 export CHANNEL_NAME=mychannel
 
@@ -90,7 +90,7 @@ approveForMySeedsAssociation() {
     # Replace localhost with your orderer's vm IP address
     peer lifecycle chaincode approveformyorg -o $1:7050 \
         --ordererTLSHostnameOverride orderer.example.com --tls \
-        --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${VERSION} \
+        --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${VERSION} --signature-policy ${CC_END_POLICY} \
         --init-required --package-id ${PACKAGE_ID} \
         --sequence ${VERSION}
     # set +x
@@ -106,7 +106,7 @@ checkCommitReadyness() {
     setGlobalsForPeer0SeedsAssociation
     peer lifecycle chaincode checkcommitreadiness \
         --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${VERSION} \
-        --sequence ${VERSION} --output json --init-required
+        --sequence ${VERSION} --signature-policy ${CC_END_POLICY} --output json --init-required
     echo "===================== checking commit readyness from org 1 ===================== "
 }
 
@@ -188,9 +188,9 @@ chaincodeQuery() {
 
 # Run this function if you add any new dependency in chaincode
 
-presetup $1
-packageChaincode $1
-installChaincode $1
+# presetup $1
+# packageChaincode $1
+# installChaincode $1
 queryInstalled $1
 approveForMySeedsAssociation $1
 # chaincodeQuery
