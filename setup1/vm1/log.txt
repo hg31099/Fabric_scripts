@@ -1,2 +1,2 @@
 Installed chaincodes on peer:
-Package ID: fabasset_1:f9eb9c9401649941a951f70d4d69cb184951ce74e5716d0ad4dba7c4ea9719b8, Label: fabasset_1
+Package ID: fabasset_1:3f2b8fe29537023ba3803e77b1bb892034f70bedfd6ef405b6438ecd8243b780, Label: fabasset_1

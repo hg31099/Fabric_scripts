@@ -113,7 +113,7 @@ checkCommitReadyness() {
     echo "===================== checking commit readyness from org 1 ===================== "
 }
 
-# checkCommitReadyness
+checkCommitReadyness
 
 commitChaincodeDefination() {
     setGlobalsForPeer0SeedsAssociation
@@ -191,11 +191,11 @@ chaincodeQuery() {
 
 # Run this function if you add any new dependency in chaincode
 
-presetup $1
-packageChaincode $1
-installChaincode $1
-queryInstalled $1
-approveForMySeedsAssociation $1
+# presetup $1
+# packageChaincode $1
+# installChaincode $1
+# queryInstalled $1
+# approveForMySeedsAssociation $1
 # chaincodeQuery
 
 # docker exec -i cli bash < ./cli_1.sh
