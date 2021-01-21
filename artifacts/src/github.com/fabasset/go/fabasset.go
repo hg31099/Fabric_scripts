@@ -506,12 +506,12 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return "", fmt.Errorf("failed getting client's orgID: %s", err.Error())
 	 }
  
-	//  if verifyOrg {
-	// 	 err = verifyClientOrgMatchesPeerOrg(clientOrgID)
-	// 	 if err != nil {
-	// 		 return "", err
-	// 	 }
-	//  }
+	 if verifyOrg {
+		 err = verifyClientOrgMatchesPeerOrg(clientOrgID)
+		 if err != nil {
+			 return "", err
+		 }
+	 }
  
 	 return clientOrgID, nil
  }
