@@ -16,8 +16,8 @@ const helper = require('./helper')
 //     return new MyTransactionEventHandler(transactionId, network, myOrgPeers);
 // }
 
-const invokeTransaction = async (channelName, chaincodeName, fcn, args, username, org_name, transientData) => {
-    try {
+const invokeTransaction = async (channelName, chaincodeName, fcn, args, username, org_name, transientData, peers) => {
+    try {               
         logger.debug(util.format('\n============ invoke transaction on channel %s ============\n', channelName));
 
         // load the network configuration
@@ -109,6 +109,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
 
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
+                        .setEndorsingPeers(peers)
                         .submit(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7])
             message = `Successfully added the asset asset with key ${args[0]}`
 
