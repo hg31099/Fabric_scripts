@@ -51,7 +51,7 @@ echo "$(json_ccp $SORG $P0PORT $CAPORT $PEERPEM $CAPEM $PEERPEM1 $P0PORT1 $BORG 
 SORG="farmersAssociation"
 BORG="FarmersAssociation"
 P0PORT=9051
-IP=137.135.122.137
+IP=52.170.250.32
 CAPORT=8054
 P0PORT1=10051
 PEERPEM=../../../vm2/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/tlscacerts/tls-localhost-8054-ca-farmersAssociation-example-com.pem
@@ -63,7 +63,7 @@ SORG="merchantsAssociation"
 BORG="MerchantsAssociation"
 P0PORT=11051
 CAPORT=10054
-IP=52.188.166.210
+IP=20.83.163.11
 P0PORT1=12051
 PEERPEM=../../../vm3/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer0.merchantsAssociation.example.com/tls/tlscacerts/tls-localhost-10054-ca-merchantsAssociation-example-com.pem
 PEERPEM1=../../../vm3/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer1.merchantsAssociation.example.com/tls/tlscacerts/tls-localhost-10054-ca-merchantsAssociation-example-com.pem

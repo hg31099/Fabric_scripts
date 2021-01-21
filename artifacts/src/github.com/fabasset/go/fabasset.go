@@ -87,6 +87,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 
 	 x := time.Now()
  
+
 	 // Create and persist asset
 	 asset := Asset{
 		//  ID:                assetID,
@@ -505,12 +506,12 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return "", fmt.Errorf("failed getting client's orgID: %s", err.Error())
 	 }
  
-	 if verifyOrg {
-		 err = verifyClientOrgMatchesPeerOrg(clientOrgID)
-		 if err != nil {
-			 return "", err
-		 }
-	 }
+	//  if verifyOrg {
+	// 	 err = verifyClientOrgMatchesPeerOrg(clientOrgID)
+	// 	 if err != nil {
+	// 		 return "", err
+	// 	 }
+	//  }
  
 	 return clientOrgID, nil
  }
@@ -638,7 +639,6 @@ func getAssetPrice(ctx contractapi.TransactionContextInterface, assetID string, 
 
 	return string(price), nil
 }
-
 // QueryAssetSaleAgreements returns all of an organization's proposed sales
 func (s *SmartContract) QueryAssetSaleAgreements(ctx contractapi.TransactionContextInterface) ([]Agreement, error) {
 	return queryAgreementsByType(ctx, typeAssetForSale)

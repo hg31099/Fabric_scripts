@@ -41,12 +41,12 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
         }
 
 
-
         const connectOptions = {
             wallet, identity: username, discovery: { enabled: true, asLocalhost: false },
             eventHandlerOptions: {
                 commitTimeout: 100,
-                strategy: DefaultEventHandlerStrategies.NETWORK_SCOPE_ALLFORTX
+                // strategy : DefaultEventHandlerStrategies.MSPID_SCOPE_ALLFORTX
+                // strategy: DefaultEventHandlerStrategies.NETWORK_SCOPE_ALLFORTX
             }
             // transaction: {
             //     strategy: createTransactionEventhandler()
@@ -59,6 +59,12 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
 
         // Get the network (channel) our contract is deployed to.
         const network = await gateway.getNetwork(channelName);
+
+        const mspId = network.getGateway().getIdentity().mspId;
+        const myOrgPeers = network.getChannel().getEndorsers(mspId);
+        console.log(`MSPID : ${mspId}`)
+        console.log(`Endorser : ${myOrgPeers}`)
+        
 
         const contract = network.getContract(chaincodeName);
 
@@ -91,26 +97,67 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
         // }
         let result
         let message;
-        if (fcn === "createAsset" || fcn === "createPrivateAssetImplicitForSeedsAssociation"
-            || fcn == "createPrivateAssetImplicitForFarmersAssociation") {
-            
-            result = await contract.submitTransaction(fcn, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
-            message = `Successfully added the asset asset with key ${args[0]}`
-
-        } else if (fcn === "changeAssetOwner") {
-            result = await contract.submitTransaction(fcn, args[0], args[1]);
-            message = `Successfully changed asset owner with key ${args[0]}`
-        } else if (fcn == "createPrivateAsset" || fcn == "updatePrivateData") {
+        if (fcn == "CreateAsset") {
             console.log(`Transient data is : ${transientData}`)
-            let assetData = JSON.parse(transientData)
+            let tstring=JSON.stringify(transientData)
+            let assetData = JSON.parse(tstring)
+            console.log(`Transient data change is : ${tstring}`)
             console.log(`asset data is : ${JSON.stringify(assetData)}`)
             let key = Object.keys(assetData)[0]
             const transientDataBuffer = {}
-            transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset))
+            transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_properties))
+
             result = await contract.createTransaction(fcn)
-                .setTransient(transientDataBuffer)
-                .submit()
-            message = `Successfully submitted transient data`
+                        .setTransient(transientDataBuffer)
+                        .submit(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7])
+            message = `Successfully added the asset asset with key ${args[0]}`
+
+        } else if ( fcn == "TransferAsset") {
+            console.log(`Transient data is : ${transientData}`)
+            let tstring=JSON.stringify(transientData)
+            let assetData = JSON.parse(tstring)
+            console.log(`Transient data change is : ${tstring}`)
+            console.log(`asset data is : ${JSON.stringify(assetData)}`)
+            let key1 = Object.keys(assetData)[0]
+            let key2 = Object.keys(assetData)[1]
+            const transientDataBuffer = {}
+            transientDataBuffer[key1] = Buffer.from(JSON.stringify(assetData.asset_properties))
+            transientDataBuffer[key2] = Buffer.from(JSON.stringify(assetData.asset_price))
+            result = await contract.createTransaction(fcn)
+                        .setTransient(transientDataBuffer)
+                        .submit(args[0], args[1])
+            message = `Successfully executed the function`
+        } else if (fcn == "AgreeToSell" || fcn == "AgreeToBuy") {
+            console.log(`Transient data is : ${transientData}`)
+            let tstring=JSON.stringify(transientData)
+            let assetData = JSON.parse(tstring)
+            console.log(`Transient data change is : ${tstring}`)
+            console.log(`asset data is : ${JSON.stringify(assetData)}`)
+            let key = Object.keys(assetData)[0]
+            const transientDataBuffer = {}
+            transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_price))
+            result = await contract.createTransaction(fcn)
+                        .setTransient(transientDataBuffer)
+                        .submit(args[0])
+            message = `Successfully executed the function`
+        }else if (fcn == "VerifyAssetProperties"){
+            console.log(`Transient data is : ${transientData}`)
+            let tstring=JSON.stringify(transientData)
+            let assetData = JSON.parse(tstring)
+            console.log(`Transient data change is : ${tstring}`)
+            console.log(`asset data is : ${JSON.stringify(assetData)}`)
+            let key = Object.keys(assetData)[0]
+            const transientDataBuffer = {}
+            transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_properties))
+            result = await contract.createTransaction(fcn)
+                        .setTransient(transientDataBuffer)
+                        .submit(args[0])
+            message = `Successfully executed the function`
+        } else if (fcn == "ChangePublicDescription")
+        {
+            result = await contract.createTransaction(fcn)
+                        .submit(args[0])
+            message = `Successfully executed the function`
         }
         else {
             return `Invocation require either createAsset or changeAssetOwner as function but got ${fcn}`

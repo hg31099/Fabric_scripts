@@ -7,6 +7,7 @@ export CC_NAME="fabasset"
 export ORDERER_CA=/etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 export VERSION="1"
 export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer','MerchantsAssociationMSP.peer')"
+# export CC_END_POLICY="AND('SeedsAssociationMSP.peer')"
 
 peer lifecycle chaincode commit -o orderer.example.com:7050 --ordererTLSHostnameOverride orderer.example.com \
 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \

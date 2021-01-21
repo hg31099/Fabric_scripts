@@ -4,7 +4,10 @@ export PEER0_SEEDSASSOCIATION_CA=${PWD}/crypto-config/peerOrganizations/seedsAss
 export PEER0_FARMERSASSOCIATION_CA=${PWD}/../vm2/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt
 export PEER0_MERCHANTSASSOCIATION_CA=${PWD}/../vm3/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer0.merchantsAssociation.example.com/tls/ca.crt
 export FABRIC_CFG_PATH=${PWD}/../../artifacts/channel/config/
+# export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer','MerchantsAssociationMSP.peer')"
+# export CC_END_POLICY="AND('SeedsAssociationMSP.peer')"
 export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer','MerchantsAssociationMSP.peer')"
+
 
 export CHANNEL_NAME=mychannel
 

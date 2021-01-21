@@ -1,0 +1,10 @@
+version: 0
+tlsconfig: 
+  certpath: ""
+  keypath: ""
+  peercacertpath: ../../../setup1/vm1/crypto-config/peerOrganizations/seedsAssociation.example.com/peers/peer0.seedsAssociation.example.com/tls/tlscacerts/tls-localhost-7054-ca-seedsAssociation-example-com.pem
+  timeout: 10s
+signerconfig:
+  mspid: SeedsAssociationMSP
+  identitypath: ../../../setup1/vm1/crypto-config/peerOrganizations/seedsAssociation.example.com/users/User1@seedsAssociation.example.com/msp/signcerts/cert.pem
+  keypath: ../../../setup1/vm1/crypto-config/peerOrganizations/seedsAssociation.example.com/msp/keystore/022644dc364e11b21b74186aa7cebe43c07bf7f3b9b877bfd82f90cd6fb0c051_sk

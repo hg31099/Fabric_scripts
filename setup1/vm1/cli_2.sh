@@ -6,7 +6,9 @@ export CHANNEL_NAME="mychannel"
 export CC_NAME="fabasset"
 export ORDERER_CA=/etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 export VERSION="1"
-export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer', 'MerchantsAssociationMSP.peer')"
+# export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer', 'MerchantsAssociationMSP.peer')"
+# export CC_END_POLICY="AND('SeedsAssociationMSP.peer')"
+export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer','MerchantsAssociationMSP.peer')"
 export ASSET_PROPERTIES=$(echo -n "{\"object_type\":\"asset_properties\",\"asset_id\":\"r1\",\"owner\":\"farmer1\",\"quantity\":\"100\",\"unit\":\"kg\",\"quality\":\"5\",\"salt\":\"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3\"}" | base64 | tr -d \\n)
 
 

@@ -69,7 +69,7 @@ app.use((req, res, next) => {
 var server = http.createServer(app).listen(port, function () { console.log(`Server started on ${port}`) });
 logger.info('****************** SERVER STARTED ************************');
 logger.info('***************  http://%s:%s  ******************', host, port);
-logger.info('***************  http://%s:%s  hheheh', host, port);
+logger.info('***************  http://%s:%s  ', host, port);
 server.timeout = 240000;
 
 function getErrorMessage(field) {
@@ -200,11 +200,14 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName', async function (req
         var fcn = req.body.fcn;
         var args = req.body.args;
         var transient = req.body.transient;
+        var orgName = req.body.orgName;
         console.log(`Transient data is ;${transient}`)
         logger.debug('channelName  : ' + channelName);
         logger.debug('chaincodeName : ' + chaincodeName);
         logger.debug('fcn  : ' + fcn);
         logger.debug('args  : ' + args);
+        logger.debug('args  : ' + orgName);
+        logger.debug('orgname 2 : ' + req.orgname);
         if (!chaincodeName) {
             res.json(getErrorMessage('\'chaincodeName\''));
             return;

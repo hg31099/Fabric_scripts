@@ -38,6 +38,7 @@ const query = async (channelName, chaincodeName, args, fcn, username, org_name) 
             wallet, identity: username, discovery: { enabled: true, asLocalhost: false }
         });
 
+
         // Get the network (channel) our contract is deployed to.
         const network = await gateway.getNetwork(channelName);
 
@@ -45,14 +46,13 @@ const query = async (channelName, chaincodeName, args, fcn, username, org_name) 
         const contract = network.getContract(chaincodeName);
         let result;
 
-        if (fcn == "queryAsset" || fcn =="queryAssetsByOwner" || fcn == 'getHistoryForAsset' || fcn=='restictedMethod') {
+        if (fcn == "ReadAsset" || fcn =="GetAssetPrivateProperties" || fcn == 'GetAssetSalesPrice' || fcn=='GetAssetBidPrice' || fcn=='QueryAssetHistory') {
             console.log(`arguments type is------------------------------------------------------------- ${typeof args}`)
             console.log(`length of args is------------------------------------------------------------ ${args.length}`)
             result = await contract.evaluateTransaction(fcn, args[0]);
 
-        } else if (fcn == "readPrivateAsset" || fcn == "queryPrivateDataHash"
-        || fcn == "collectionAssetPrivateDetails") {
-            result = await contract.evaluateTransaction(fcn, args[0], args[1]);
+        } else if (fcn == "QueryAssetSaleAgreements" || fcn == "QueryAssetBuyAgreements") {
+            result = await contract.evaluateTransaction(fcn);
             // return result
 
         }

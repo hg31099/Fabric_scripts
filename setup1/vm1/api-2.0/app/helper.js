@@ -4,11 +4,14 @@ var { Gateway, Wallets } = require('fabric-network');
 const path = require('path');
 const FabricCAServices = require('fabric-ca-client');
 const fs = require('fs');
+const yaml = require('js-yaml');
 
 const util = require('util');
 
 const getCCP = async (org) => {
     let ccpPath;
+    // ccpPath = path.resolve(__dirname, '..', 'config', 'temp.yaml');
+
     if (org == "SeedsAssociation") {
         ccpPath = path.resolve(__dirname, '..', 'config', 'connection-seedsAssociation.json');
 
@@ -23,6 +26,8 @@ const getCCP = async (org) => {
     const ccpJSON = fs.readFileSync(ccpPath, 'utf8')
     const ccp = JSON.parse(ccpJSON);
     return ccp
+    // const ccpyaml=yaml.safeLoad(fs.readFileSync(ccpPath, 'utf8'));
+    // return ccpyaml
 }
 
 const getCaUrl = async (org, ccp) => {
