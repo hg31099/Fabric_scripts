@@ -2,7 +2,7 @@ export CORE_PEER_TLS_ENABLED=true
 export ORDERER_CA=${PWD}/../vm4/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 export PEER0_FARMERSASSOCIATION_CA=${PWD}/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt
 export FABRIC_CFG_PATH=${PWD}/../../artifacts/channel/config/
-
+export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer','MerchantsAssociationMSP.peer')"
 export CHANNEL_NAME=mychannel
 
 setGlobalsForPeer0FarmersAssociation() {
@@ -75,7 +75,7 @@ approveForMyFarmersAssociation() {
         --ordererTLSHostnameOverride orderer.example.com --tls $CORE_PEER_TLS_ENABLED \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME} \
         --version ${VERSION} --init-required --package-id ${PACKAGE_ID} \
-        --sequence ${VERSION}
+        --sequence ${VERSION} --signature-policy ${CC_END_POLICY}
 
     echo "===================== chaincode approved from org 2 ===================== "
 }
@@ -87,7 +87,7 @@ checkCommitReadyness() {
     setGlobalsForPeer0FarmersAssociation
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
         --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_FARMERSASSOCIATION_CA \
-        --name ${CC_NAME} --version ${VERSION} --sequence ${VERSION} --output json --init-required
+        --name ${CC_NAME} --version ${VERSION} --sequence ${VERSION} --signature-policy ${CC_END_POLICY} --output json --init-required
     echo "===================== checking commit readyness from org 1 ===================== "
 }
 
