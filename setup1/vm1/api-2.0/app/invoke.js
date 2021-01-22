@@ -126,6 +126,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             transientDataBuffer[key2] = Buffer.from(JSON.stringify(assetData.asset_price))
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
+                        .setEndorsingPeers(peers)
                         .submit(args[0], args[1])
             message = `Successfully executed the function`
         } else if (fcn == "AgreeToSell" || fcn == "AgreeToBuy") {
@@ -139,6 +140,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_price))
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
+                        .setEndorsingPeers(peers)
                         .submit(args[0])
             message = `Successfully executed the function`
         }else if (fcn == "VerifyAssetProperties"){
@@ -157,7 +159,8 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
         } else if (fcn == "ChangePublicDescription")
         {
             result = await contract.createTransaction(fcn)
-                        .submit(args[0])
+                        .setEndorsingPeers(peers)
+                        .submit(args[0],args[1])
             message = `Successfully executed the function`
         }
         else {
