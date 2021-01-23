@@ -38,7 +38,7 @@
 		"FarmersAssociationMSP": {
 			"mspid": "FarmersAssociationMSP",
 			"adminPrivateKey": {
-				"path": "/tmp/crypto/peerOrganizations/farmersAssociation.example.com/users/Admin@farmersAssociation.example.com/msp/keystore/acad23f9e06a7543dd2e3f781688b4d1faa66beed2eab4ceeeac9b8cc7e18a01_sk"
+				"path": "/tmp/crypto/peerOrganizations/farmersAssociation.example.com/users/Admin@farmersAssociation.example.com/msp/keystore/9ae47a888c9e6808ae3caa3ea08753cb643d4fb1b7a6de3af64ee78c768976f9_sk"
 			},
 			"peers": ["peer0.farmersAssociation.example.com"],
 			"signedCert": {
