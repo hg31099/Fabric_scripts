@@ -451,7 +451,6 @@ intermediate:
 cfg:
   identities:
     passwordattempts: 10
-    allowremove : true
     
 ###############################################################################
 #

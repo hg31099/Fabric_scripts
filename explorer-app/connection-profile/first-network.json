@@ -8,7 +8,7 @@
 			"password": "exploreradminpw"
 		},
 		"enableAuthentication": true,
-		"organization": "FarmersAssociationMSP",
+		"organization": "WholesalersAssociationMSP",
 		"connection": {
 			"timeout": {
 				"peer": {
@@ -21,7 +21,7 @@
 	"channels": { 
 		"trustflow": {
 			"peers": {
-				"peer0.farmersAssociation.example.com": {}
+				"peer0.wholesalersAssociation.example.com": {}
 			},
 			"connection": {
 				"timeout": {
@@ -35,23 +35,23 @@
 		}
 	},
 	"organizations": {
-		"FarmersAssociationMSP": {
-			"mspid": "FarmersAssociationMSP",
+		"WholesalersAssociationMSP": {
+			"mspid": "WholesalersAssociationMSP",
 			"adminPrivateKey": {
-				"path": "/tmp/crypto/peerOrganizations/farmersAssociation.example.com/users/Admin@farmersAssociation.example.com/msp/keystore/9ae47a888c9e6808ae3caa3ea08753cb643d4fb1b7a6de3af64ee78c768976f9_sk"
+				"path": "/tmp/crypto/peerOrganizations/wholesalersAssociation.example.com/users/Admin@wholesalersAssociation.example.com/msp/keystore/c050e7d45aaed6739e5f33660390b52d40fc4ea18fbaf1db99bde1364c68ea3d_sk"
 			},
-			"peers": ["peer0.farmersAssociation.example.com"],
+			"peers": ["peer0.wholesalersAssociation.example.com"],
 			"signedCert": {
-				"path": "/tmp/crypto/peerOrganizations/farmersAssociation.example.com/users/Admin@farmersAssociation.example.com/msp/signcerts/cert.pem"
+				"path": "/tmp/crypto/peerOrganizations/wholesalersAssociation.example.com/users/Admin@wholesalersAssociation.example.com/msp/signcerts/cert.pem"
 			}
 		}
 	},
 	"peers": {
-		"peer0.farmersAssociation.example.com": {
+		"peer0.wholesalersAssociation.example.com": {
 			"tlsCACerts": {
-				"path": "/tmp/crypto/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt"
+				"path": "/tmp/crypto/peerOrganizations/wholesalersAssociation.example.com/peers/peer0.wholesalersAssociation.example.com/tls/ca.crt"
 			},
-			"url": "grpcs://peer0.farmersAssociation.example.com:7051"
+			"url": "grpcs://peer0.wholesalersAssociation.example.com:9051"
 		}
 	}
 }
