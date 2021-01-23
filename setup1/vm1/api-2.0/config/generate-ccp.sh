@@ -33,41 +33,41 @@ function yaml_ccp {
 }
 
 
+echo "" > connection-wholesalersAssociation.json
+echo "" > connection-retailersAssociation.json
 echo "" > connection-farmersAssociation.json
-echo "" > connection-merchantsAssociation.json
-echo "" > connection-seedsAssociation.json
 
-SORG="seedsAssociation"
-BORG="SeedsAssociation"
+SORG="farmersAssociation"
+BORG="FarmersAssociation"
 P0PORT=7051
 CAPORT=7054
 IP=104.41.128.25
 P0PORT1=8051
-PEERPEM=../../crypto-config/peerOrganizations/seedsAssociation.example.com/peers/peer0.seedsAssociation.example.com/tls/tlscacerts/tls-localhost-7054-ca-seedsAssociation-example-com.pem
-PEERPEM1=../../crypto-config/peerOrganizations/seedsAssociation.example.com/peers/peer1.seedsAssociation.example.com/tls/tlscacerts/tls-localhost-7054-ca-seedsAssociation-example-com.pem
-CAPEM=../../crypto-config/peerOrganizations/seedsAssociation.example.com/msp/tlscacerts/ca.crt
-echo "$(json_ccp $SORG $P0PORT $CAPORT $PEERPEM $CAPEM $PEERPEM1 $P0PORT1 $BORG $IP)" > connection-seedsAssociation.json
+PEERPEM=../../crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/tlscacerts/tls-localhost-7054-ca-farmersAssociation-example-com.pem
+PEERPEM1=../../crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer1.farmersAssociation.example.com/tls/tlscacerts/tls-localhost-7054-ca-farmersAssociation-example-com.pem
+CAPEM=../../crypto-config/peerOrganizations/farmersAssociation.example.com/msp/tlscacerts/ca.crt
+echo "$(json_ccp $SORG $P0PORT $CAPORT $PEERPEM $CAPEM $PEERPEM1 $P0PORT1 $BORG $IP)" > connection-farmersAssociation.json
 
-SORG="farmersAssociation"
-BORG="FarmersAssociation"
+SORG="wholesalersAssociation"
+BORG="WholesalersAssociation"
 P0PORT=9051
 IP=52.170.250.32
 CAPORT=8054
 P0PORT1=10051
-PEERPEM=../../../vm2/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/tlscacerts/tls-localhost-8054-ca-farmersAssociation-example-com.pem
-PEERPEM1=../../../vm2/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer1.farmersAssociation.example.com/tls/tlscacerts/tls-localhost-8054-ca-farmersAssociation-example-com.pem
-CAPEM=../../../vm2/crypto-config/peerOrganizations/farmersAssociation.example.com/msp/tlscacerts/ca.crt
-echo "$(json_ccp $SORG $P0PORT $CAPORT $PEERPEM $CAPEM $PEERPEM1 $P0PORT1 $BORG $IP)" > connection-farmersAssociation.json
+PEERPEM=../../../vm2/crypto-config/peerOrganizations/wholesalersAssociation.example.com/peers/peer0.wholesalersAssociation.example.com/tls/tlscacerts/tls-localhost-8054-ca-wholesalersAssociation-example-com.pem
+PEERPEM1=../../../vm2/crypto-config/peerOrganizations/wholesalersAssociation.example.com/peers/peer1.wholesalersAssociation.example.com/tls/tlscacerts/tls-localhost-8054-ca-wholesalersAssociation-example-com.pem
+CAPEM=../../../vm2/crypto-config/peerOrganizations/wholesalersAssociation.example.com/msp/tlscacerts/ca.crt
+echo "$(json_ccp $SORG $P0PORT $CAPORT $PEERPEM $CAPEM $PEERPEM1 $P0PORT1 $BORG $IP)" > connection-wholesalersAssociation.json
 
-SORG="merchantsAssociation"
-BORG="MerchantsAssociation"
+SORG="retailersAssociation"
+BORG="RetailersAssociation"
 P0PORT=11051
 CAPORT=10054
 IP=20.83.163.11
 P0PORT1=12051
-PEERPEM=../../../vm3/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer0.merchantsAssociation.example.com/tls/tlscacerts/tls-localhost-10054-ca-merchantsAssociation-example-com.pem
-PEERPEM1=../../../vm3/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer1.merchantsAssociation.example.com/tls/tlscacerts/tls-localhost-10054-ca-merchantsAssociation-example-com.pem
-CAPEM=../../../vm3/crypto-config/peerOrganizations/merchantsAssociation.example.com/msp/tlscacerts/ca.crt
-echo "$(json_ccp $SORG $P0PORT $CAPORT $PEERPEM $CAPEM $PEERPEM1 $P0PORT1 $BORG $IP)" > connection-merchantsAssociation.json
+PEERPEM=../../../vm3/crypto-config/peerOrganizations/retailersAssociation.example.com/peers/peer0.retailersAssociation.example.com/tls/tlscacerts/tls-localhost-10054-ca-retailersAssociation-example-com.pem
+PEERPEM1=../../../vm3/crypto-config/peerOrganizations/retailersAssociation.example.com/peers/peer1.retailersAssociation.example.com/tls/tlscacerts/tls-localhost-10054-ca-retailersAssociation-example-com.pem
+CAPEM=../../../vm3/crypto-config/peerOrganizations/retailersAssociation.example.com/msp/tlscacerts/ca.crt
+echo "$(json_ccp $SORG $P0PORT $CAPORT $PEERPEM $CAPEM $PEERPEM1 $P0PORT1 $BORG $IP)" > connection-retailersAssociation.json
 
 

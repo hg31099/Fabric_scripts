@@ -8,7 +8,7 @@
 			"password": "exploreradminpw"
 		},
 		"enableAuthentication": true,
-		"organization": "SeedsAssociationMSP",
+		"organization": "FarmersAssociationMSP",
 		"connection": {
 			"timeout": {
 				"peer": {
@@ -19,9 +19,9 @@
 		}
 	},
 	"channels": {
-		"mychannel": {
+		"trustflow": {
 			"peers": {
-				"peer0.seedsAssociation.example.com": {}
+				"peer0.farmersAssociation.example.com": {}
 			},
 			"connection": {
 				"timeout": {
@@ -35,23 +35,23 @@
 		}
 	},
 	"organizations": {
-		"SeedsAssociationMSP": {
-			"mspid": "SeedsAssociationMSP",
+		"FarmersAssociationMSP": {
+			"mspid": "FarmersAssociationMSP",
 			"adminPrivateKey": {
-				"path": "/tmp/crypto/peerOrganizations/seedsAssociation.example.com/users/Admin@seedsAssociation.example.com/msp/keystore/acad23f9e06a7543dd2e3f781688b4d1faa66beed2eab4ceeeac9b8cc7e18a01_sk"
+				"path": "/tmp/crypto/peerOrganizations/farmersAssociation.example.com/users/Admin@farmersAssociation.example.com/msp/keystore/acad23f9e06a7543dd2e3f781688b4d1faa66beed2eab4ceeeac9b8cc7e18a01_sk"
 			},
-			"peers": ["peer0.seedsAssociation.example.com"],
+			"peers": ["peer0.farmersAssociation.example.com"],
 			"signedCert": {
-				"path": "/tmp/crypto/peerOrganizations/seedsAssociation.example.com/users/Admin@seedsAssociation.example.com/msp/signcerts/cert.pem"
+				"path": "/tmp/crypto/peerOrganizations/farmersAssociation.example.com/users/Admin@farmersAssociation.example.com/msp/signcerts/cert.pem"
 			}
 		}
 	},
 	"peers": {
-		"peer0.seedsAssociation.example.com": {
+		"peer0.farmersAssociation.example.com": {
 			"tlsCACerts": {
-				"path": "/tmp/crypto/peerOrganizations/seedsAssociation.example.com/peers/peer0.seedsAssociation.example.com/tls/ca.crt"
+				"path": "/tmp/crypto/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt"
 			},
-			"url": "grpcs://peer0.seedsAssociation.example.com:7051"
+			"url": "grpcs://peer0.farmersAssociation.example.com:7051"
 		}
 	}
 }

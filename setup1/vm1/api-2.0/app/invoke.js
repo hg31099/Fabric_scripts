@@ -9,19 +9,13 @@ const util = require('util')
 
 const helper = require('./helper')
 
-// const createTransactionEventHandler = (transactionId, network) => {
-//     /* Your implementation here */
-//     const mspId = network.getGateway().getIdentity().mspId;
-//     const myOrgPeers = network.getChannel().getEndorsers(mspId);
-//     return new MyTransactionEventHandler(transactionId, network, myOrgPeers);
-// }
 
 const invokeTransaction = async (channelName, chaincodeName, fcn, args, username, org_name, transientData, peers) => {
     try {               
         logger.debug(util.format('\n============ invoke transaction on channel %s ============\n', channelName));
 
         // load the network configuration
-        // const ccpPath =path.resolve(__dirname, '..', 'config', 'connection-seedsAssociation.json');
+        // const ccpPath =path.resolve(__dirname, '..', 'config', 'connection-farmersAssociation.json');
         // const ccpJSON = fs.readFileSync(ccpPath, 'utf8')
         const ccp = await helper.getCCP(org_name) //JSON.parse(ccpJSON);
 
@@ -48,9 +42,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
                 // strategy : DefaultEventHandlerStrategies.MSPID_SCOPE_ALLFORTX
                 // strategy: DefaultEventHandlerStrategies.NETWORK_SCOPE_ALLFORTX
             }
-            // transaction: {
-            //     strategy: createTransactionEventhandler()
-            // }
+
         }
 
         // Create a new gateway for connecting to our peer node.
@@ -68,33 +60,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
 
         const contract = network.getContract(chaincodeName);
 
-        // let result
-        // let message;
-        // switch (fcn) {
-        //     case "CreateInvoice":
-        //         result = await contract.submitTransaction(fcn, args[0]);
-        //         // obj = JSON.stringify(JSON.parse(args[0]))
-        //         // console.log(JSON.parse(args[0]))
-        //         message = `Successfully added the Invoice Data`
-        //         break;
-        //     case "UpdateInvoice":
-        //         if (org_name == "SeedsAssociation") {
-        //             return { message: "Only Organization 2 is allowed to add transactions" }
-        //         } else {
-        //             result = await contract.submitTransaction(fcn, args[0], args[1], args[2]);
-        //             // obj = JSON.stringify(JSON.parse(args[0]))
-        //             // console.log(JSON.parse(args[0]))
-        //             message = `Successfully updated the Invoice Data`
-        //             break;
-        //         }
-
-
-        //     // case ""
-
-        //     default:
-        //         return utils.getResponsePayload("Please send correct chaincode function name", null, false)
-        //         break;
-        // }
+    
         let result
         let message;
         if (fcn == "CreateAsset") {
@@ -105,7 +71,18 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             console.log(`asset data is : ${JSON.stringify(assetData)}`)
             let key = Object.keys(assetData)[0]
             const transientDataBuffer = {}
-            transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_properties))
+            // transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_properties))
+
+            console.log(JSON.stringify(assetData.asset_properties) )
+            const orderedTransient = Object.keys(assetData.asset_properties).sort().reduce(
+                (obj, key) => { 
+                  obj[key] = assetData.asset_properties[key]; 
+                  return obj;
+                }, 
+                {}
+              );
+              console.log(JSON.stringify(orderedTransient));
+              transientDataBuffer[key] = Buffer.from(JSON.stringify(orderedTransient))
 
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
@@ -122,8 +99,28 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             let key1 = Object.keys(assetData)[0]
             let key2 = Object.keys(assetData)[1]
             const transientDataBuffer = {}
-            transientDataBuffer[key1] = Buffer.from(JSON.stringify(assetData.asset_properties))
-            transientDataBuffer[key2] = Buffer.from(JSON.stringify(assetData.asset_price))
+            console.log(JSON.stringify(assetData.asset_properties) )
+            const orderedTransient1 = Object.keys(assetData.asset_properties).sort().reduce(
+                (obj, key) => { 
+                  obj[key] = assetData.asset_properties[key]; 
+                  return obj;
+                }, 
+                {}
+              );
+              console.log(JSON.stringify(orderedTransient1));
+              transientDataBuffer[key1] = Buffer.from(JSON.stringify(orderedTransient1))
+            console.log(JSON.stringify(assetData.asset_price) )
+            const orderedTransient2 = Object.keys(assetData.asset_price).sort().reduce(
+                (obj, key) => { 
+                  obj[key] = assetData.asset_price[key]; 
+                  return obj;
+                }, 
+                {}
+              );
+              console.log(JSON.stringify(orderedTransient2));
+              transientDataBuffer[key2] = Buffer.from(JSON.stringify(orderedTransient2))
+            // transientDataBuffer[key1] = Buffer.from(JSON.stringify(assetData.asset_properties))
+            // transientDataBuffer[key2] = Buffer.from(JSON.stringify(assetData.asset_price))
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
@@ -137,7 +134,17 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             console.log(`asset data is : ${JSON.stringify(assetData)}`)
             let key = Object.keys(assetData)[0]
             const transientDataBuffer = {}
-            transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_price))
+            // transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_price))
+            console.log(JSON.stringify(assetData.asset_price) )
+            const orderedTransient = Object.keys(assetData.asset_price).sort().reduce(
+                (obj, key) => { 
+                  obj[key] = assetData.asset_price[key]; 
+                  return obj;
+                }, 
+                {}
+              );
+              console.log(JSON.stringify(orderedTransient));
+              transientDataBuffer[key] = Buffer.from(JSON.stringify(orderedTransient))
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
@@ -151,7 +158,18 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             console.log(`asset data is : ${JSON.stringify(assetData)}`)
             let key = Object.keys(assetData)[0]
             const transientDataBuffer = {}
-            transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_properties))
+
+            console.log(JSON.stringify(assetData.asset_properties) )
+            const orderedTransient = Object.keys(assetData.asset_properties).sort().reduce(
+                (obj, key) => { 
+                  obj[key] = assetData.asset_properties[key]; 
+                  return obj;
+                }, 
+                {}
+              );
+              console.log(JSON.stringify(orderedTransient));
+              transientDataBuffer[key] = Buffer.from(JSON.stringify(orderedTransient))
+            // transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_properties))
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .submit(args[0])
@@ -172,14 +190,8 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
 
         let response = {
             message: message
-            // result
+         
         }
-
-        // let response = {
-        //     message: message,
-        //     result
-        // }
-
         return response;
 
 

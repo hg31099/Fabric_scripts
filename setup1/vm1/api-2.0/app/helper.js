@@ -12,14 +12,14 @@ const getCCP = async (org) => {
     let ccpPath;
     // ccpPath = path.resolve(__dirname, '..', 'config', 'temp.yaml');
 
-    if (org == "SeedsAssociation") {
-        ccpPath = path.resolve(__dirname, '..', 'config', 'connection-seedsAssociation.json');
-
-    } else if (org == "FarmersAssociation") {
+    if (org == "FarmersAssociation") {
         ccpPath = path.resolve(__dirname, '..', 'config', 'connection-farmersAssociation.json');
+
+    } else if (org == "WholesalersAssociation") {
+        ccpPath = path.resolve(__dirname, '..', 'config', 'connection-wholesalersAssociation.json');
     }
-    else if (org == "MerchantsAssociation") {
-        ccpPath = path.resolve(__dirname, '..', 'config', 'connection-merchantsAssociation.json');
+    else if (org == "RetailersAssociation") {
+        ccpPath = path.resolve(__dirname, '..', 'config', 'connection-retailersAssociation.json');
     }
     else
         return null
@@ -32,13 +32,13 @@ const getCCP = async (org) => {
 
 const getCaUrl = async (org, ccp) => {
     let caURL;
-    if (org == "SeedsAssociation") {
-        caURL = ccp.certificateAuthorities['ca.seedsAssociation.example.com'].url;
-
-    } else if (org == "FarmersAssociation") {
+    if (org == "FarmersAssociation") {
         caURL = ccp.certificateAuthorities['ca.farmersAssociation.example.com'].url;
-    } else if (org == "MerchantsAssociation") {
-        caURL = ccp.certificateAuthorities['ca.merchantsAssociation.example.com'].url;
+
+    } else if (org == "WholesalersAssociation") {
+        caURL = ccp.certificateAuthorities['ca.wholesalersAssociation.example.com'].url;
+    } else if (org == "RetailersAssociation") {
+        caURL = ccp.certificateAuthorities['ca.retailersAssociation.example.com'].url;
     } else
         return null
     return caURL
@@ -47,13 +47,13 @@ const getCaUrl = async (org, ccp) => {
 
 const getWalletPath = async (org) => {
     let walletPath;
-    if (org == "SeedsAssociation") {
-        walletPath = path.join(process.cwd(), 'seedsAssociation-wallet');
-
-    } else if (org == "FarmersAssociation") {
+    if (org == "FarmersAssociation") {
         walletPath = path.join(process.cwd(), 'farmersAssociation-wallet');
-    } else if (org == "MerchantsAssociation") {
-        walletPath = path.join(process.cwd(), 'merchantsAssociation-wallet');
+
+    } else if (org == "WholesalersAssociation") {
+        walletPath = path.join(process.cwd(), 'wholesalersAssociation-wallet');
+    } else if (org == "RetailersAssociation") {
+        walletPath = path.join(process.cwd(), 'retailersAssociation-wallet');
     } else
         return null
     return walletPath
@@ -62,19 +62,18 @@ const getWalletPath = async (org) => {
 
 
 const getAffiliation = async (org) => {
-    if(org == "SeedsAssociation")
-    {
-        return 'seedsassociation.department1';
-    }
-    else if(org == "FarmersAssociation")
+    if(org == "FarmersAssociation")
     {
         return 'farmersassociation.department1';
     }
-    else if(org == "MerchantsAssociation")
+    else if(org == "WholesalersAssociation")
     {
-        return 'merchantsassociation.department1';
+        return 'wholesalersassociation.department1';
     }
-    // return org == "SeedsAssociation" ? 'seedsassociation.department1' : 'farmersassociation.department1'
+    else if(org == "RetailersAssociation")
+    {
+        return 'retailersassociation.department1';
+    }
 }
 
 const getRegisteredUser = async (username, userOrg, isJson) => {
@@ -113,14 +112,14 @@ const getRegisteredUser = async (username, userOrg, isJson) => {
     try {
         if (username == "superuser") {
             // Register the user, enroll the user, and import the new identity into the wallet.
-            if (userOrg== "seedsAssociation"){
-                secret = await ca.register({ affiliation: 'seedsassociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'admin', ecert: true }] }, adminUser);
-            }
-            else if (userOrg== "farmersAssociation"){
+            if (userOrg== "farmersAssociation"){
                 secret = await ca.register({ affiliation: 'farmersassociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'admin', ecert: true }] }, adminUser);
             }
-            else if (userOrg== "merchantsAssociation"){
-                secret = await ca.register({ affiliation: 'merchantsassociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'admin', ecert: true }] }, adminUser);
+            else if (userOrg== "wholesalersAssociation"){
+                secret = await ca.register({ affiliation: 'wholesalersassociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'admin', ecert: true }] }, adminUser);
+            }
+            else if (userOrg== "retailersAssociation"){
+                secret = await ca.register({ affiliation: 'retailersassociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'admin', ecert: true }] }, adminUser);
             }
 
         } else {
@@ -143,16 +142,7 @@ const getRegisteredUser = async (username, userOrg, isJson) => {
 
 
     let x509Identity;
-    if (userOrg == "SeedsAssociation") {
-        x509Identity = {
-            credentials: {
-                certificate: enrollment.certificate,
-                privateKey: enrollment.key.toBytes(),
-            },
-            mspId: 'SeedsAssociationMSP',
-            type: 'X.509',
-        };
-    } else if (userOrg == "FarmersAssociation") {
+    if (userOrg == "FarmersAssociation") {
         x509Identity = {
             credentials: {
                 certificate: enrollment.certificate,
@@ -161,14 +151,23 @@ const getRegisteredUser = async (username, userOrg, isJson) => {
             mspId: 'FarmersAssociationMSP',
             type: 'X.509',
         };
-    }
-    else if (userOrg == "MerchantsAssociation") {
+    } else if (userOrg == "WholesalersAssociation") {
         x509Identity = {
             credentials: {
                 certificate: enrollment.certificate,
                 privateKey: enrollment.key.toBytes(),
             },
-            mspId: 'MerchantsAssociationMSP',
+            mspId: 'WholesalersAssociationMSP',
+            type: 'X.509',
+        };
+    }
+    else if (userOrg == "RetailersAssociation") {
+        x509Identity = {
+            credentials: {
+                certificate: enrollment.certificate,
+                privateKey: enrollment.key.toBytes(),
+            },
+            mspId: 'RetailersAssociationMSP',
             type: 'X.509',
         };
     }
@@ -199,13 +198,13 @@ const isUserRegistered = async (username, userOrg) => {
 
 const getCaInfo = async (org, ccp) => {
     let caInfo
-    if (org == "SeedsAssociation") {
-        caInfo = ccp.certificateAuthorities['ca.seedsAssociation.example.com'];
-
-    } else if (org == "FarmersAssociation") {
+    if (org == "FarmersAssociation") {
         caInfo = ccp.certificateAuthorities['ca.farmersAssociation.example.com'];
-    } else if (org == "MerchantsAssociation") {
-        caInfo = ccp.certificateAuthorities['ca.merchantsAssociation.example.com'];
+
+    } else if (org == "WholesalersAssociation") {
+        caInfo = ccp.certificateAuthorities['ca.wholesalersAssociation.example.com'];
+    } else if (org == "RetailersAssociation") {
+        caInfo = ccp.certificateAuthorities['ca.retailersAssociation.example.com'];
     } else
         return null
     return caInfo
@@ -217,7 +216,7 @@ const enrollAdmin = async (org, ccp) => {
 
     try {
 
-        const caInfo = await getCaInfo(org, ccp) //ccp.certificateAuthorities['ca.seedsAssociation.example.com'];
+        const caInfo = await getCaInfo(org, ccp) //ccp.certificateAuthorities['ca.farmersAssociation.example.com'];
         const caTLSCACerts = caInfo.tlsCACerts.pem;
         const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
 
@@ -236,16 +235,7 @@ const enrollAdmin = async (org, ccp) => {
         // Enroll the admin user, and import the new identity into the wallet.
         const enrollment = await ca.enroll({ enrollmentID: 'admin', enrollmentSecret: 'adminpw' });
         let x509Identity;
-        if (org == "SeedsAssociation") {
-            x509Identity = {
-                credentials: {
-                    certificate: enrollment.certificate,
-                    privateKey: enrollment.key.toBytes(),
-                },
-                mspId: 'SeedsAssociationMSP',
-                type: 'X.509',
-            };
-        } else if (org == "FarmersAssociation") {
+        if (org == "FarmersAssociation") {
             x509Identity = {
                 credentials: {
                     certificate: enrollment.certificate,
@@ -254,13 +244,22 @@ const enrollAdmin = async (org, ccp) => {
                 mspId: 'FarmersAssociationMSP',
                 type: 'X.509',
             };
-        } else if (org == "MerchantsAssociation") {
+        } else if (org == "WholesalersAssociation") {
             x509Identity = {
                 credentials: {
                     certificate: enrollment.certificate,
                     privateKey: enrollment.key.toBytes(),
                 },
-                mspId: 'MerchantsAssociationMSP',
+                mspId: 'WholesalersAssociationMSP',
+                type: 'X.509',
+            };
+        } else if (org == "RetailersAssociation") {
+            x509Identity = {
+                credentials: {
+                    certificate: enrollment.certificate,
+                    privateKey: enrollment.key.toBytes(),
+                },
+                mspId: 'RetailersAssociationMSP',
                 type: 'X.509',
             };
         }
@@ -311,7 +310,7 @@ const registerAndGerSecret = async (username, userOrg) => {
         console.log("hey i am here 2");
         // Register the user, enroll the user, and import the new identity into the wallet.
         secret = await ca.register({ affiliation: await getAffiliation(userOrg), enrollmentID: username, role: 'client' }, adminUser);
-        // const secret = await ca.register({ affiliation: 'seedsAssociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'approver', ecert: true }] }, adminUser);
+        // const secret = await ca.register({ affiliation: 'farmersAssociation.department1', enrollmentID: username, role: 'client', attrs: [{ name: 'role', value: 'approver', ecert: true }] }, adminUser);
 
     } catch (error) {
         return error.message

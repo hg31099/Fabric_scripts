@@ -19,18 +19,6 @@ OrdererOrgs:
             - "127.0.0.1"
 
 PeerOrgs:
-  - Name: SeedsAssociation
-    Domain: seedsAssociation.example.com
-    EnableNodeOUs: true
-
-    Template:
-      Count: 2
-      SANS:
-        - "localhost"
-
-    Users:
-      Count: 1
-
   - Name: FarmersAssociation
     Domain: farmersAssociation.example.com
     EnableNodeOUs: true
@@ -43,8 +31,20 @@ PeerOrgs:
     Users:
       Count: 1
 
-  - Name: MerchantsAssociation
-    Domain: merchantsAssociation.example.com
+  - Name: WholesalersAssociation
+    Domain: wholesalersAssociation.example.com
+    EnableNodeOUs: true
+
+    Template:
+      Count: 2
+      SANS:
+        - "localhost"
+
+    Users:
+      Count: 1
+
+  - Name: RetailersAssociation
+    Domain: retailersAssociation.example.com
     EnableNodeOUs: true
 
     Template:

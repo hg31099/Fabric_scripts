@@ -15,7 +15,7 @@ const qscc = async (channelName, chaincodeName, args, fcn, username, org_name) =
     try {
 
         // load the network configuration
-        // const ccpPath = path.resolve(__dirname, '..', 'config', 'connection-seedsAssociation.json');
+        // const ccpPath = path.resolve(__dirname, '..', 'config', 'connection-farmersAssociation.json');
         // const ccpJSON = fs.readFileSync(ccpPath, 'utf8')
         const ccp = await helper.getCCP(org_name) //JSON.parse(ccpJSON);
 

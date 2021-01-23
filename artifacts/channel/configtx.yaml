@@ -16,36 +16,11 @@ Organizations:
                 Type: Signature
                 Rule: "OR('OrdererMSP.admin')"
 
-    - &SeedsAssociation
-        Name: SeedsAssociationMSP
-        ID: SeedsAssociationMSP
-
-        MSPDir: ../../setup1/vm1/crypto-config/peerOrganizations/seedsAssociation.example.com/msp
-
-        Policies:
-            Readers:
-                Type: Signature
-                Rule: "OR('SeedsAssociationMSP.admin', 'SeedsAssociationMSP.peer', 'SeedsAssociationMSP.client')"
-            Writers:
-                Type: Signature
-                Rule: "OR('SeedsAssociationMSP.admin', 'SeedsAssociationMSP.client')"
-            Admins:
-                Type: Signature
-                Rule: "OR('SeedsAssociationMSP.admin')"
-            Endorsement:
-                Type: Signature
-                Rule: "OR('SeedsAssociationMSP.peer')"
-
-        AnchorPeers:
-            - Host: peer0.seedsAssociation.example.com
-              Port: 7051
-
     - &FarmersAssociation
         Name: FarmersAssociationMSP
-
         ID: FarmersAssociationMSP
 
-        MSPDir: ../../setup1/vm2/crypto-config/peerOrganizations/farmersAssociation.example.com/msp
+        MSPDir: ../../setup1/vm1/crypto-config/peerOrganizations/farmersAssociation.example.com/msp
 
         Policies:
             Readers:
@@ -63,31 +38,56 @@ Organizations:
 
         AnchorPeers:
             - Host: peer0.farmersAssociation.example.com
-              Port: 9051
+              Port: 7051
 
-    - &MerchantsAssociation
-        Name: MerchantsAssociationMSP
+    - &WholesalersAssociation
+        Name: WholesalersAssociationMSP
 
-        ID: MerchantsAssociationMSP
+        ID: WholesalersAssociationMSP
 
-        MSPDir: ../../setup1/vm3/crypto-config/peerOrganizations/merchantsAssociation.example.com/msp
+        MSPDir: ../../setup1/vm2/crypto-config/peerOrganizations/wholesalersAssociation.example.com/msp
 
         Policies:
             Readers:
                 Type: Signature
-                Rule: "OR('MerchantsAssociationMSP.admin', 'MerchantsAssociationMSP.peer', 'MerchantsAssociationMSP.client')"
+                Rule: "OR('WholesalersAssociationMSP.admin', 'WholesalersAssociationMSP.peer', 'WholesalersAssociationMSP.client')"
             Writers:
                 Type: Signature
-                Rule: "OR('MerchantsAssociationMSP.admin', 'MerchantsAssociationMSP.client')"
+                Rule: "OR('WholesalersAssociationMSP.admin', 'WholesalersAssociationMSP.client')"
             Admins:
                 Type: Signature
-                Rule: "OR('MerchantsAssociationMSP.admin')"
+                Rule: "OR('WholesalersAssociationMSP.admin')"
             Endorsement:
                 Type: Signature
-                Rule: "OR('MerchantsAssociationMSP.peer')"
+                Rule: "OR('WholesalersAssociationMSP.peer')"
 
         AnchorPeers:
-            - Host: peer0.merchantsAssociation.example.com
+            - Host: peer0.wholesalersAssociation.example.com
+              Port: 9051
+
+    - &RetailersAssociation
+        Name: RetailersAssociationMSP
+
+        ID: RetailersAssociationMSP
+
+        MSPDir: ../../setup1/vm3/crypto-config/peerOrganizations/retailersAssociation.example.com/msp
+
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('RetailersAssociationMSP.admin', 'RetailersAssociationMSP.peer', 'RetailersAssociationMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('RetailersAssociationMSP.admin', 'RetailersAssociationMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('RetailersAssociationMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('RetailersAssociationMSP.peer')"
+
+        AnchorPeers:
+            - Host: peer0.retailersAssociation.example.com
               Port: 11051
 
 Capabilities:
@@ -181,9 +181,9 @@ Profiles:
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *SeedsAssociation
                 - *FarmersAssociation
-                - *MerchantsAssociation
+                - *WholesalersAssociation
+                - *RetailersAssociation
             Capabilities:
                 <<: *ApplicationCapabilities
 
@@ -220,6 +220,6 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                - *SeedsAssociation
                 - *FarmersAssociation
-                - *MerchantsAssociation
+                - *WholesalersAssociation
+                - *RetailersAssociation

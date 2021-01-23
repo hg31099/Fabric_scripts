@@ -13,7 +13,7 @@ const query = async (channelName, chaincodeName, args, fcn, username, org_name) 
         console.log(`arguments type is------------------------------------------------------------- ${typeof args}`)
         console.log(`length of args is------------------------------------------------------------ ${args.length}`)
         // load the network configuration
-        // const ccpPath = path.resolve(__dirname, '..', 'config', 'connection-seedsAssociation.json');
+        // const ccpPath = path.resolve(__dirname, '..', 'config', 'connection-farmersAssociation.json');
         // const ccpJSON = fs.readFileSync(ccpPath, 'utf8')
         const ccp = await helper.getCCP(org_name) //JSON.parse(ccpJSON);
 

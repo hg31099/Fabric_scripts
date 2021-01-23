@@ -5,13 +5,13 @@
 // Step : 1 generate an unsigned transaction proposal with the identity's certificate
 
 const certPem = '<PEM encoded certificate content>';
-const mspId = 'SeedsAssociationMSP'; // the msp Id for this org
+const mspId = 'FarmersAssociationMSP'; // the msp Id for this org
 
 const transactionProposal = {
     fcn: 'move',
     args: ['a', 'b', '100'],
     chaincodeId: 'mychaincodeId',
-    channelId: 'mychannel',
+    channelId: 'trustflow',
 };
 const { proposal, txId } = channel.generateUnsignedProposal(transactionProposal, mspId, certPem);
 

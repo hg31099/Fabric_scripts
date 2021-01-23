@@ -1,43 +1,42 @@
 export CORE_PEER_TLS_ENABLED=true
 export ORDERER_CA=${PWD}/../vm4/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-export PEER0_SEEDSASSOCIATION_CA=${PWD}/crypto-config/peerOrganizations/seedsAssociation.example.com/peers/peer0.seedsAssociation.example.com/tls/ca.crt
-export PEER0_FARMERSASSOCIATION_CA=${PWD}/../vm2/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt
-export PEER0_MERCHANTSASSOCIATION_CA=${PWD}/../vm3/crypto-config/peerOrganizations/merchantsAssociation.example.com/peers/peer0.merchantsAssociation.example.com/tls/ca.crt
+export PEER0_FARMERSASSOCIATION_CA=${PWD}/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt
+export PEER0_WHOLESALERSASSOCIATION_CA=${PWD}/../vm2/crypto-config/peerOrganizations/wholesalersAssociation.example.com/peers/peer0.wholesalersAssociation.example.com/tls/ca.crt
+export PEER0_RETAILERSASSOCIATION_CA=${PWD}/../vm3/crypto-config/peerOrganizations/retailersAssociation.example.com/peers/peer0.retailersAssociation.example.com/tls/ca.crt
 export FABRIC_CFG_PATH=${PWD}/../../artifacts/channel/config/
-# export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer','MerchantsAssociationMSP.peer')"
-# export CC_END_POLICY="AND('SeedsAssociationMSP.peer')"
-export CC_END_POLICY="OR('SeedsAssociationMSP.peer','FarmersAssociationMSP.peer','MerchantsAssociationMSP.peer')"
+export CC_END_POLICY="OR('FarmersAssociationMSP.peer','WholesalersAssociationMSP.peer','RetailersAssociationMSP.peer')"
+export ASSET_PROPERTIES=$(echo -n "{\"object_type\":\"asset_properties\",\"asset_id\":\"r1\",\"owner\":\"farmer1\",\"quantity\":\"100\",\"unit\":\"kg\",\"quality\":\"5\",\"salt\":\"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3\"}" | base64 | tr -d \\n)
 
 
-export CHANNEL_NAME=mychannel
+export CHANNEL_NAME=trustflow
 
-setGlobalsForPeer0SeedsAssociation() {
-    export CORE_PEER_LOCALMSPID="SeedsAssociationMSP"
-    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_SEEDSASSOCIATION_CA
-    export CORE_PEER_MSPCONFIGPATH=${PWD}/crypto-config/peerOrganizations/seedsAssociation.example.com/users/Admin@seedsAssociation.example.com/msp
+setGlobalsForPeer0FarmersAssociation() {
+    export CORE_PEER_LOCALMSPID="FarmersAssociationMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_FARMERSASSOCIATION_CA
+    export CORE_PEER_MSPCONFIGPATH=${PWD}/crypto-config/peerOrganizations/farmersAssociation.example.com/users/Admin@farmersAssociation.example.com/msp
     export CORE_PEER_ADDRESS=localhost:7051
 }
 
-setGlobalsForPeer1SeedsAssociation() {
-    export CORE_PEER_LOCALMSPID="SeedsAssociationMSP"
-    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_SEEDSASSOCIATION_CA
-    export CORE_PEER_MSPCONFIGPATH=${PWD}/crypto-config/peerOrganizations/seedsAssociation.example.com/users/Admin@seedsAssociation.example.com/msp
+setGlobalsForPeer1FarmersAssociation() {
+    export CORE_PEER_LOCALMSPID="FarmersAssociationMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_FARMERSASSOCIATION_CA
+    export CORE_PEER_MSPCONFIGPATH=${PWD}/crypto-config/peerOrganizations/farmersAssociation.example.com/users/Admin@farmersAssociation.example.com/msp
     export CORE_PEER_ADDRESS=localhost:8051
 
 }
 
-# setGlobalsForPeer0FarmersAssociation() {
-#     export CORE_PEER_LOCALMSPID="FarmersAssociationMSP"
-#     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_FARMERSASSOCIATION_CA
-#     export CORE_PEER_MSPCONFIGPATH=${PWD}/../../artifacts/channel/crypto-config/peerOrganizations/farmersAssociation.example.com/users/Admin@farmersAssociation.example.com/msp
+# setGlobalsForPeer0WholesalersAssociation() {
+#     export CORE_PEER_LOCALMSPID="WholesalersAssociationMSP"
+#     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_WHOLESALERSASSOCIATION_CA
+#     export CORE_PEER_MSPCONFIGPATH=${PWD}/../../artifacts/channel/crypto-config/peerOrganizations/wholesalersAssociation.example.com/users/Admin@wholesalersAssociation.example.com/msp
 #     export CORE_PEER_ADDRESS=localhost:9051
 
 # }
 
-# setGlobalsForPeer1FarmersAssociation() {
-#     export CORE_PEER_LOCALMSPID="FarmersAssociationMSP"
-#     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_FARMERSASSOCIATION_CA
-#     export CORE_PEER_MSPCONFIGPATH=${PWD}/../../artifacts/channel/crypto-config/peerOrganizations/farmersAssociation.example.com/users/Admin@farmersAssociation.example.com/msp
+# setGlobalsForPeer1WholesalersAssociation() {
+#     export CORE_PEER_LOCALMSPID="WholesalersAssociationMSP"
+#     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_WHOLESALERSASSOCIATION_CA
+#     export CORE_PEER_MSPCONFIGPATH=${PWD}/../../artifacts/channel/crypto-config/peerOrganizations/wholesalersAssociation.example.com/users/Admin@wholesalersAssociation.example.com/msp
 #     export CORE_PEER_ADDRESS=localhost:10051
 
 # }
@@ -51,7 +50,7 @@ presetup() {
 }
 # presetup
 
-CHANNEL_NAME="mychannel"
+CHANNEL_NAME="trustflow"
 CC_RUNTIME_LANGUAGE="golang"
 VERSION="1"
 CC_SRC_PATH="./../../artifacts/src/github.com/fabasset/go"
@@ -59,36 +58,36 @@ CC_NAME="fabasset"
 
 packageChaincode() {
     rm -rf ${CC_NAME}.tar.gz
-    setGlobalsForPeer0SeedsAssociation
+    setGlobalsForPeer0FarmersAssociation
     peer lifecycle chaincode package ${CC_NAME}.tar.gz \
         --path ${CC_SRC_PATH} --lang ${CC_RUNTIME_LANGUAGE} \
         --label ${CC_NAME}_${VERSION}
-    echo "===================== Chaincode is packaged on peer0.seedsAssociation ===================== "
+    echo "===================== Chaincode is packaged on peer0.farmersAssociation ===================== "
 }
 # packageChaincode
 
 installChaincode() {
-    setGlobalsForPeer0SeedsAssociation
+    setGlobalsForPeer0FarmersAssociation
     peer lifecycle chaincode install ${CC_NAME}.tar.gz
-    echo "===================== Chaincode is installed on peer0.seedsAssociation ===================== "
+    echo "===================== Chaincode is installed on peer0.farmersAssociation ===================== "
 
 }
 
 # installChaincode
 
 queryInstalled() {
-    setGlobalsForPeer0SeedsAssociation
+    setGlobalsForPeer0FarmersAssociation
     peer lifecycle chaincode queryinstalled >&log.txt
     cat log.txt
     PACKAGE_ID=$(sed -n "/${CC_NAME}_${VERSION}/{s/^Package ID: //; s/, Label:.*$//; p;}" log.txt)
     echo PackageID is ${PACKAGE_ID}
-    echo "===================== Query installed successful on peer0.seedsAssociation on channel ===================== "
+    echo "===================== Query installed successful on peer0.farmersAssociation on channel ===================== "
 }
 
 # queryInstalled
 
-approveForMySeedsAssociation() {
-    setGlobalsForPeer0SeedsAssociation
+approveForMyFarmersAssociation() {
+    setGlobalsForPeer0FarmersAssociation
     # set -x
     # Replace localhost with your orderer's vm IP address
     peer lifecycle chaincode approveformyorg -o $1:7050 \
@@ -103,10 +102,10 @@ approveForMySeedsAssociation() {
 }
 
 # queryInstalled
-# approveForMySeedsAssociation
+# approveForMyFarmersAssociation
 
 checkCommitReadyness() {
-    setGlobalsForPeer0SeedsAssociation
+    setGlobalsForPeer0FarmersAssociation
     peer lifecycle chaincode checkcommitreadiness \
         --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${VERSION} \
         --sequence ${VERSION} --signature-policy ${CC_END_POLICY} --output json --init-required
@@ -116,20 +115,20 @@ checkCommitReadyness() {
 # checkCommitReadyness
 
 commitChaincodeDefination() {
-    setGlobalsForPeer0SeedsAssociation
+    setGlobalsForPeer0FarmersAssociation
     peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com \
         --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
         --channelID $CHANNEL_NAME --name ${CC_NAME} \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SEEDSASSOCIATION_CA \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_FARMERSASSOCIATION_CA \
-        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_MERCHANTSASSOCIATION_CA \
+        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_FARMERSASSOCIATION_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_WHOLESALERSASSOCIATION_CA \
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_RETAILERSASSOCIATION_CA \
         --version ${VERSION} --sequence ${VERSION} --init-required
 }
 
 # commitChaincodeDefination
 
 queryCommitted() {
-    setGlobalsForPeer0SeedsAssociation
+    setGlobalsForPeer0FarmersAssociation
     peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME --name ${CC_NAME}
 
 }
@@ -137,33 +136,32 @@ queryCommitted() {
 # queryCommitted
 
 chaincodeInvokeInit() {
-    setGlobalsForPeer0SeedsAssociation
+    setGlobalsForPeer0FarmersAssociation
     peer chaincode invoke -o localhost:7050 \
         --ordererTLSHostnameOverride orderer.example.com \
         --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
         -C $CHANNEL_NAME -n ${CC_NAME} \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_FARMERSASSOCIATION_CA \
-         --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_MERCHANTSASSOCIATION_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_WHOLESALERSASSOCIATION_CA \
+         --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_RETAILERSASSOCIATION_CA \
         --isInit -c '{"Args":[]}'
 
 }
 
- # --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SEEDSASSOCIATION_CA \
+ # --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_FARMERSASSOCIATION_CA \
 
 # chaincodeInvokeInit
 
 chaincodeInvoke() {
-    setGlobalsForPeer0SeedsAssociation
+    setGlobalsForPeer0FarmersAssociation
 
     ## Create Asset
-    peer chaincode invoke -o localhost:7050 \
-        --ordererTLSHostnameOverride orderer.example.com \
-        --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
-        -C $CHANNEL_NAME -n ${CC_NAME} \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SEEDSASSOCIATION_CA \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_FARMERSASSOCIATION_CA   \
-        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_MERCHANTSASSOCIATION_CA \
-        -c '{"function": "createCar","Args":["ps1", "Potato", "seeds", "organic", "Farmer1"]}'
+    peer chaincode invoke -o orderer.example.com:7050 \
+    --ordererTLSHostnameOverride orderer.example.com \
+    --tls \
+    --cafile /etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+    -C $CHANNEL_NAME -n ${CC_NAME} \
+    --peerAddresses peer0.farmersAssociation.example.com:7051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt \
+    -c '{"function": "CreateAsset","Args":["r1", "Rice", "Basmati", "hyderabadi", "grain", "true","farmer1", "open to sell"]}' --transient "{\"asset_properties\":\"$ASSET_PROPERTIES\"}"
 
     ## Init ledger
     # peer chaincode invoke -o localhost:7050 \
@@ -171,8 +169,8 @@ chaincodeInvoke() {
     #     --tls $CORE_PEER_TLS_ENABLED \
     #     --cafile $ORDERER_CA \
     #     -C $CHANNEL_NAME -n ${CC_NAME} \
-    #     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SEEDSASSOCIATION_CA \
-    #     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_FARMERSASSOCIATION_CA \
+    #     --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_FARMERSASSOCIATION_CA \
+    #     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_WHOLESALERSASSOCIATION_CA \
     #     -c '{"function": "initLedger","Args":[]}'
 
 }
@@ -180,10 +178,10 @@ chaincodeInvoke() {
 # chaincodeInvoke
 
 chaincodeQuery() {
-    setGlobalsForPeer0SeedsAssociation
+    setGlobalsForPeer0FarmersAssociation
 
     # Query Asset by Id
-    peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "queryCar","Args":["ps1"]}'
+    peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "ReadAsset","Args":["r1"]}'
  
 }
 
@@ -195,7 +193,7 @@ presetup $1
 packageChaincode $1
 installChaincode $1
 queryInstalled $1
-approveForMySeedsAssociation $1
+approveForMyFarmersAssociation $1
 # chaincodeQuery
 
 # docker exec -i cli bash < ./cli_1.sh
