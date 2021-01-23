@@ -1,2 +1,2 @@
 #!/bin/sh
-docker swarm join --token SWMTKN-1-2w0rnv2b9qaye6vkhk5wiztqcxmbmak9f3ijnn95xhuo7y64vt-c06vc5n3rovljuh3r3etyu380 104.41.128.25:2377 --advertise-addr $1
+docker swarm join --token SWMTKN-1-2zcjfppfofcjrjx317c6n13l7qk414ojfkfd7yrrm23fh2f1u2-ed9z9ht1h1ds40aovjupabuqi 104.41.128.25:2377 --advertise-addr $1
