@@ -1,0 +1,62 @@
+{
+    "name": "first-network-farmersAssociation",
+    "version": "1.0.0",
+    "client": {
+        "organization": "FarmersAssociation",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "FarmersAssociation": {
+            "mspid": "FarmersAssociationMSP",
+            "peers": [
+                "peer0.farmersAssociation.example.com",
+                "peer1.farmersAssociation.example.com"
+            ],
+            "certificateAuthorities": [
+                "ca.farmersAssociation.example.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.farmersAssociation.example.com": {
+            "url": "grpcs://104.41.128.25:7051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUBc7C7vXl/eelTZLwiFd2Cx3PlRYwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNTEyNDEwMFoXDTM1MTIyMjEyNDEwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEcACRWi7uU4Ej0KyhdcRnBsE/\naSPyO2MQ+WplPaUd2we8NlUqeMGR7y4uCyk7jCFNgZdp15Z6LL+VTfmkLHBs1qNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMQ3czhzAEXH+s9Y2EMSv4kUBjpEMAoGCCqGSM49BAMCA0gAMEUCIQD7uboKXvW1\n++h5PBmBZrrQMpX+CGS8rNEXscXmiHOrbwIgbLn9Maq1yYGrMIQJiJkScM0U3d68\n9wLybdfmDOAG30Q=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.farmersAssociation.example.com",
+                "hostnameOverride": "peer0.farmersAssociation.example.com"
+            }
+        },
+	"peer1.farmersAssociation.example.com": {
+            "url": "grpcs://104.41.128.25:8051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUBc7C7vXl/eelTZLwiFd2Cx3PlRYwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNTEyNDEwMFoXDTM1MTIyMjEyNDEwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEcACRWi7uU4Ej0KyhdcRnBsE/\naSPyO2MQ+WplPaUd2we8NlUqeMGR7y4uCyk7jCFNgZdp15Z6LL+VTfmkLHBs1qNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMQ3czhzAEXH+s9Y2EMSv4kUBjpEMAoGCCqGSM49BAMCA0gAMEUCIQD7uboKXvW1\n++h5PBmBZrrQMpX+CGS8rNEXscXmiHOrbwIgbLn9Maq1yYGrMIQJiJkScM0U3d68\n9wLybdfmDOAG30Q=\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.farmersAssociation.example.com",
+                "hostnameOverride": "peer1.farmersAssociation.example.com"
+            }
+        }
+
+	
+    },
+    "certificateAuthorities": {
+        "ca.farmersAssociation.example.com": {
+            "url": "https://104.41.128.25:7054",
+            "caName": "ca.farmersAssociation.example.com",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUBc7C7vXl/eelTZLwiFd2Cx3PlRYwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNTEyNDEwMFoXDTM1MTIyMjEyNDEwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEcACRWi7uU4Ej0KyhdcRnBsE/\naSPyO2MQ+WplPaUd2we8NlUqeMGR7y4uCyk7jCFNgZdp15Z6LL+VTfmkLHBs1qNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMQ3czhzAEXH+s9Y2EMSv4kUBjpEMAoGCCqGSM49BAMCA0gAMEUCIQD7uboKXvW1\n++h5PBmBZrrQMpX+CGS8rNEXscXmiHOrbwIgbLn9Maq1yYGrMIQJiJkScM0U3d68\n9wLybdfmDOAG30Q=\n-----END CERTIFICATE-----\n"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}

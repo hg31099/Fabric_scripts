@@ -18,7 +18,7 @@
 			}
 		}
 	},
-	"channels": {
+	"channels": { 
 		"trustflow": {
 			"peers": {
 				"peer0.farmersAssociation.example.com": {}

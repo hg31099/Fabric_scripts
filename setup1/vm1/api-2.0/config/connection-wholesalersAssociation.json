@@ -1,0 +1,62 @@
+{
+    "name": "first-network-wholesalersAssociation",
+    "version": "1.0.0",
+    "client": {
+        "organization": "WholesalersAssociation",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "WholesalersAssociation": {
+            "mspid": "WholesalersAssociationMSP",
+            "peers": [
+                "peer0.wholesalersAssociation.example.com",
+                "peer1.wholesalersAssociation.example.com"
+            ],
+            "certificateAuthorities": [
+                "ca.wholesalersAssociation.example.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.wholesalersAssociation.example.com": {
+            "url": "grpcs://52.170.250.32:9051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFjCCAb2gAwIBAgIULuD1UOk0GMtVb4Tcu5LYKgtP7K4wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNjA2MDYwMFoXDTM1MTIyMzA2MDYwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoQ+p7hz6TdGMUjHIsHmU4KQR\nQhC8OlvWwHZDxnz4wo2sM5ecHCL3NPStAtdoWDpuqEgAo7o5xlPA6xO+dxte4KNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFP2nAXwMyjmP3B3NQ2RV9MDW+X56MAoGCCqGSM49BAMCA0cAMEQCIAvpJC3gS82L\n4EWeLgDU15qBm+KWYo66Z9BAx36e1FxXAiBIt8W+JzQDuOEpXKFrlsWdujkeD8Hl\nsRNscT/AKhOzSQ==\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.wholesalersAssociation.example.com",
+                "hostnameOverride": "peer0.wholesalersAssociation.example.com"
+            }
+        },
+	"peer1.wholesalersAssociation.example.com": {
+            "url": "grpcs://52.170.250.32:10051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFjCCAb2gAwIBAgIULuD1UOk0GMtVb4Tcu5LYKgtP7K4wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNjA2MDYwMFoXDTM1MTIyMzA2MDYwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoQ+p7hz6TdGMUjHIsHmU4KQR\nQhC8OlvWwHZDxnz4wo2sM5ecHCL3NPStAtdoWDpuqEgAo7o5xlPA6xO+dxte4KNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFP2nAXwMyjmP3B3NQ2RV9MDW+X56MAoGCCqGSM49BAMCA0cAMEQCIAvpJC3gS82L\n4EWeLgDU15qBm+KWYo66Z9BAx36e1FxXAiBIt8W+JzQDuOEpXKFrlsWdujkeD8Hl\nsRNscT/AKhOzSQ==\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.wholesalersAssociation.example.com",
+                "hostnameOverride": "peer1.wholesalersAssociation.example.com"
+            }
+        }
+
+	
+    },
+    "certificateAuthorities": {
+        "ca.wholesalersAssociation.example.com": {
+            "url": "https://52.170.250.32:8054",
+            "caName": "ca.wholesalersAssociation.example.com",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFjCCAb2gAwIBAgIULuD1UOk0GMtVb4Tcu5LYKgtP7K4wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNjA2MDYwMFoXDTM1MTIyMzA2MDYwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoQ+p7hz6TdGMUjHIsHmU4KQR\nQhC8OlvWwHZDxnz4wo2sM5ecHCL3NPStAtdoWDpuqEgAo7o5xlPA6xO+dxte4KNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFP2nAXwMyjmP3B3NQ2RV9MDW+X56MAoGCCqGSM49BAMCA0cAMEQCIAvpJC3gS82L\n4EWeLgDU15qBm+KWYo66Z9BAx36e1FxXAiBIt8W+JzQDuOEpXKFrlsWdujkeD8Hl\nsRNscT/AKhOzSQ==\n-----END CERTIFICATE-----\n"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}
