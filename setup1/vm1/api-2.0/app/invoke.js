@@ -87,7 +87,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
-                        .submit(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7])
+                        .submit(args[0], args[1], args[2], args[3], args[4], args[5], args[6], username)
             message = `Successfully added the asset asset with key ${args[0]}`
 
         } else if ( fcn == "TransferAsset") {
@@ -124,7 +124,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
-                        .submit(args[0], args[1])
+                        .submit(args[0], args[1],args[2],username)
             message = `Successfully executed the function`
         } else if (fcn == "AgreeToSell" || fcn == "AgreeToBuy") {
             console.log(`Transient data is : ${transientData}`)
@@ -148,7 +148,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
-                        .submit(args[0])
+                        .submit(args[0],username)
             message = `Successfully executed the function`
         }else if (fcn == "VerifyAssetProperties"){
             console.log(`Transient data is : ${transientData}`)
@@ -178,7 +178,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
         {
             result = await contract.createTransaction(fcn)
                         .setEndorsingPeers(peers)
-                        .submit(args[0],args[1])
+                        .submit(args[0],args[1],username)
             message = `Successfully executed the function`
         }
         else {

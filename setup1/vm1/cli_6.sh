@@ -10,9 +10,9 @@ export CHANNEL_NAME="trustflow"
 export CC_NAME="fabasset"
 export ORDERER_CA=/etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 export VERSION="1"
-export CC_END_POLICY="OR('FarmersAssociationMSP.peer','WholesalersAssociationMSP.peer', 'RetailersAssociationMSP.peer')"
-export ASSET_PROPERTIES=$(echo -n "{\"object_type\":\"asset_properties\",\"asset_id\":\"r1\",\"owner\":\"farmer1\",\"quantity\":\"100\",\"unit\":\"kg\",\"quality\":\"5\",\"salt\":\"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3\"}" | base64 | tr -d \\n)
-export ASSET_PRICE=$(echo -n "{\"object_type\":\"asset_price\",\"asset_id\":\"r1\",\"owner\":\"farmer1\",\"price\":1400,\"salt\":\"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3\"}" | base64 | tr -d \\n)
+export CC_END_POLICY="OR('FarmersAssociationMSP.peer','WholesalersAssociationMSP.peer','RetailersAssociationMSP.peer')"
+export ASSET_PROPERTIES=$(echo -n "{\"object_type\":\"asset_properties\",\"assetID\":\"r1\",\"quantity\":\"100\",\"unit\":\"kg\",\"quality\":\"5\",\"tradeID\":\"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3\"}" | base64 | tr -d \\n)
+export ASSET_PRICE=$(echo -n "{\"object_type\":\"asset_price\",\"assetID\":\"r1\",\"price\":1500,\"tradeID\":\"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3\"}" | base64 | tr -d \\n)
 
 # peer chaincode invoke -o orderer.example.com:7050 \
 # --ordererTLSHostnameOverride orderer.example.com \
@@ -31,7 +31,7 @@ peer chaincode invoke -o orderer.example.com:7050 \
 --cafile /etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
 -C $CHANNEL_NAME -n ${CC_NAME} \
 --peerAddresses peer0.retailersAssociation.example.com:11051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/retailersAssociation.example.com/peers/peer0.retailersAssociation.example.com/tls/ca.crt \
--c '{"function": "AgreeToBuy","Args":["r1"]}' --transient "{\"asset_price\":\"$ASSET_PRICE\"}"
+-c '{"function": "AgreeToBuy","Args":["r1","wholesalerCli1"]}' --transient "{\"asset_price\":\"$ASSET_PRICE\"}"
 # -c '{"function": "ChangePublicDescription","Args":["r1", "Asset Sold"]}' #--transient "{\"asset_properties\":\"$ASSET_PROPERTIES\"}"
 # --peerAddresses peer0.farmersAssociation.example.com:7051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt \
 # -c '{"function": "TransferAsset","Args":["r1","FarmersAssociationMSP"]}' --transient "{\"asset_price\":\"$ASSET_PRICE\", \"asset_properties\":\"$ASSET_PROPERTIES\"}"

@@ -5,7 +5,6 @@ const log4js = require('log4js');
 const logger = log4js.getLogger('BasicNetwork');
 const util = require('util')
 
-
 const helper = require('./helper')
 const query = async (channelName, chaincodeName, args, fcn, username, org_name) => {
 
@@ -46,12 +45,17 @@ const query = async (channelName, chaincodeName, args, fcn, username, org_name) 
         const contract = network.getContract(chaincodeName);
         let result;
 
-        if (fcn == "ReadAsset" || fcn =="GetAssetPrivateProperties" || fcn == 'GetAssetSalesPrice' || fcn=='GetAssetBidPrice' || fcn=='QueryAssetHistory') {
+        if ( fcn =="GetAssetPrivateProperties" || fcn == 'GetAssetSalesPrice' || fcn=='GetAssetBidPrice') {
             console.log(`arguments type is------------------------------------------------------------- ${typeof args}`)
             console.log(`length of args is------------------------------------------------------------ ${args.length}`)
-            result = await contract.evaluateTransaction(fcn, args[0]);
+            result = await contract.evaluateTransaction(fcn, args[0], username);
 
-        } else if (fcn == "QueryAssetSaleAgreements" || fcn == "QueryAssetBuyAgreements") {
+        } 
+        else if(fcn == "ReadAsset" || fcn=='QueryAssetHistory' )
+        {
+            result = await contract.evaluateTransaction(fcn, args[0]);
+        }
+        else if (fcn == "QueryAssetSaleAgreements" || fcn == "QueryAssetBuyAgreements") {
             result = await contract.evaluateTransaction(fcn);
             // return result
 

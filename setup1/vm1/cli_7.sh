@@ -6,7 +6,7 @@ export CHANNEL_NAME="trustflow"
 export CC_NAME="fabasset"
 export ORDERER_CA=/etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 export VERSION="1"
-export CC_END_POLICY="OR('FarmersAssociationMSP.peer','WholesalersAssociationMSP.peer', 'RetailersAssociationMSP.peer')"
+export CC_END_POLICY="OR('FarmersAssociationMSP.peer','WholesalersAssociationMSP.peer','RetailersAssociationMSP.peer')"
 
 # export CORE_PEER_LOCALMSPID="FarmersAssociationMSP"
 # export CORE_PEER_LOCALMSPID="WholesalersAssociationMSP"

@@ -32,9 +32,9 @@ type QueryResult struct {
 }
 
 type Agreement struct {
-	ID      string `json:"asset_id"`
+	ID      string `json:"assetID"`
 	Price   int    `json:"price"`
-	TradeID string `json:"trade_id"`
+	TradeID string `json:"tradeID"`
 }
  //---------------------------------
  // Asset struct and properties must be exported (start with capitals) to work with contract api metadata
@@ -65,7 +65,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 }
  
  // CreateAsset creates a asset and sets it as owned by the client's org
- func (s *SmartContract) CreateAsset(ctx contractapi.TransactionContextInterface, a0 string, a1 string, a2 string, a3 string, a4 string, a5 string, a6 string, a7 string) error {
+ func (s *SmartContract) CreateAsset(ctx contractapi.TransactionContextInterface, a0 string, a1 string, a2 string, a3 string, a4 string, a5 string, a6 string, ownerName string) error {
  
 	 transMap, err := ctx.GetStub().GetTransient()
 	 if err != nil {
@@ -102,8 +102,8 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 // Quality      		string `json:"quality"`
 		 AssetType:   			a4,
 		 Organic:   			a5,
-		 Owner:   				a6,
-		 PublicDescription: 	a7,
+		 PublicDescription: 	a6,
+		 Owner:   				ownerName,
 		 CreationTimestamp:  	x,
 		 OwnerOrg:          	clientOrgID,
 	 }
@@ -135,7 +135,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  }
  
  // ChangePublicDescription updates the asset public description. Only the current owner can update the public description
- func (s *SmartContract) ChangePublicDescription(ctx contractapi.TransactionContextInterface, assetID string, newDescription string) error {
+ func (s *SmartContract) ChangePublicDescription(ctx contractapi.TransactionContextInterface, assetID string, newDescription string,ownerName string) error {
  
 	 // Get client org id
 	 // No need to check client org id matches peer org id, rely on the asset ownership check instead.
@@ -143,12 +143,17 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return fmt.Errorf("failed to get verified OrgID: %s", err.Error())
 	 }
- 
+	 
 	 asset, err := s.ReadAsset(ctx, assetID)
 	 if err != nil {
 		 return fmt.Errorf("failed to get asset: %s", err.Error())
 	 }
- 
+	 
+	 //owner name check 
+	 if ownerName != asset.Owner {
+		return fmt.Errorf("a client %s cannot update the description of a asset owned by %s", ownerName, asset.Owner)
+	}
+
 	 // auth check to ensure that client's org actually owns the asset
 	 if clientOrgID != asset.OwnerOrg {
 		 return fmt.Errorf("a client from %s cannot update the description of a asset owned by %s", clientOrgID, asset.OwnerOrg)
@@ -165,13 +170,18 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  }
  
  // AgreeToSell adds seller's asking price to seller's implicit private data collection
- func (s *SmartContract) AgreeToSell(ctx contractapi.TransactionContextInterface, assetID string) error {
+ func (s *SmartContract) AgreeToSell(ctx contractapi.TransactionContextInterface, assetID string,ownerName string) error {
 	 // Query asset and verify that this clientOrgId actually owns the asset.
 	 asset, err := s.ReadAsset(ctx, assetID)
 	 if err != nil {
 		 return err
 	 }
- 
+
+ 	//owner name check 
+	 if ownerName != asset.Owner {
+		return fmt.Errorf("a client %s cannot sell a asset owned by %s", ownerName, asset.Owner)
+	}
+
 	 clientOrgID, err := getClientOrgID(ctx, true)
 	 if err != nil {
 		 return fmt.Errorf("failed to get verified OrgID: %s", err.Error())
@@ -181,16 +191,16 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return fmt.Errorf("a client from %s cannot sell a asset owned by %s", clientOrgID, asset.OwnerOrg)
 	 }
  
-	 return agreeToPrice(ctx, assetID, typeAssetForSale)
+	 return agreeToPrice(ctx, assetID, typeAssetForSale,ownerName)
  }
  
  // AgreeToBuy adds buyer's bid price to buyer's implicit private data collection
- func (s *SmartContract) AgreeToBuy(ctx contractapi.TransactionContextInterface, assetID string) error {
-	 return agreeToPrice(ctx, assetID, typeAssetBid)
+ func (s *SmartContract) AgreeToBuy(ctx contractapi.TransactionContextInterface, assetID string, buyerName string) error {
+	 return agreeToPrice(ctx, assetID, typeAssetBid, buyerName)
  }
  
  // agreeToPrice adds a bid or ask price to caller's implicit private data collection
- func agreeToPrice(ctx contractapi.TransactionContextInterface, assetID string, priceType string) error {
+ func agreeToPrice(ctx contractapi.TransactionContextInterface, assetID string, priceType string, requesterName string) error {
  
 	 // Get client org id and verify it matches peer org id.
 	 // In this scenario, client is only authorized to read/write private data from its own peer.
@@ -216,7 +226,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  
 	 // Persist the agreed to price in a collection sub-namespace based on priceType key prefix,
 	 // to avoid collisions between private asset properties, sell price, and buy price
-	 assetPriceKey, err := ctx.GetStub().CreateCompositeKey(priceType, []string{assetID})
+	 assetPriceKey, err := ctx.GetStub().CreateCompositeKey(priceType, []string{assetID, requesterName})
 	 if err != nil {
 		 return fmt.Errorf("failed to create composite key: %s", err.Error())
 	 }
@@ -231,8 +241,6 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  
  // VerifyAssetProperties implement function to verify asset properties using the hash
  // Allows a buyer to validate the properties of an asset against the owner's implicit private data collection
-
- //Data should be passed in same order as it was stored!!!Order matters
  func (s *SmartContract) VerifyAssetProperties(ctx contractapi.TransactionContextInterface, assetID string) (bool, error) {
 	 transMap, err := ctx.GetStub().GetTransient()
 	 if err != nil {
@@ -274,7 +282,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  
  // TransferAsset checks transfer conditions and then transfers asset state to buyer.
  // TransferAsset can only be called by current owner
- func (s *SmartContract) TransferAsset(ctx contractapi.TransactionContextInterface, assetID string, buyerOrgID string) error {
+ func (s *SmartContract) TransferAsset(ctx contractapi.TransactionContextInterface, assetID string, buyerOrgID string, buyerName string, ownerName string) error {
  
 	 // Get client org id and verify it matches peer org id.
 	 // For a transfer, selling client must get endorsement from their own peer and from buyer peer, therefore don't verify client org id matches peer org id
@@ -282,7 +290,15 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return fmt.Errorf("failed to get verified OrgID: %s", err.Error())
 	 }
- 
+	 asset, err := s.ReadAsset(ctx, assetID)
+	 if err != nil {
+		 return err
+	 }
+	 //owner name check 
+	 if ownerName != asset.Owner {
+		return fmt.Errorf("a client %s cannot transfer a asset owned by %s", ownerName, asset.Owner)
+	}
+
 	 transMap, err := ctx.GetStub().GetTransient()
 	 if err != nil {
 		 return fmt.Errorf("Error getting transient: " + err.Error())
@@ -304,17 +320,13 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return fmt.Errorf("failed to unmarshal price JSON: %s", err.Error())
 	 }
  
-	 asset, err := s.ReadAsset(ctx, assetID)
-	 if err != nil {
-		 return fmt.Errorf("failed to get asset: %s", err.Error())
-	 }
  
-	 err = verifyTransferConditions(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, priceJSON)
+	 err = verifyTransferConditions(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, priceJSON,ownerName, buyerName)
 	 if err != nil {
 		 return fmt.Errorf("failed transfer verification: %s", err.Error())
 	 }
  
-	 err = transferAssetState(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, agreement.Price)
+	 err = transferAssetState(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, agreement.Price, ownerName, buyerName)
 	 if err != nil {
 		 return fmt.Errorf("failed asset transfer: %s", err.Error())
 	 }
@@ -324,8 +336,12 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  }
  
  // verifyTransferConditions checks that client org currently owns asset and that both parties have agreed on price
- func verifyTransferConditions(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, priceJSON []byte) error {
+ func verifyTransferConditions(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, priceJSON []byte, ownerName string, buyerName string) error {
  
+	//CHECK 0: owner name check, seller owns the asset 
+	if ownerName != asset.Owner {
+		return fmt.Errorf("a client %s cannot transfer a asset owned by %s", ownerName, asset.Owner)
+	}
 	 // CHECK1: auth check to ensure that client's org actually owns the asset
  
 	 if clientOrgID != asset.OwnerOrg {
@@ -357,7 +373,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 // CHECK3: verify that seller and buyer agreed on the same price
  
 	 // get seller (current owner) asking price
-	 assetForSaleKey, err := ctx.GetStub().CreateCompositeKey(typeAssetForSale, []string{asset.ID})
+	 assetForSaleKey, err := ctx.GetStub().CreateCompositeKey(typeAssetForSale, []string{asset.ID,ownerName})
 	 if err != nil {
 		 return fmt.Errorf("failed to create composite key: %s", err.Error())
 	 }
@@ -371,7 +387,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  
 	 // get buyer bid price
 	 collectionBuyer := buildCollectionName(buyerOrgID)
-	 assetBidKey, err := ctx.GetStub().CreateCompositeKey(typeAssetBid, []string{asset.ID})
+	 assetBidKey, err := ctx.GetStub().CreateCompositeKey(typeAssetBid, []string{asset.ID,buyerName})
 	 if err != nil {
 		 return fmt.Errorf("failed to create composite key: %s", err.Error())
 	 }
@@ -403,11 +419,12 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  }
  
  // transferAssetState makes the public and private state updates for the transferred asset
- func transferAssetState(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, price int) error {
+ func transferAssetState(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, price int, ownerName string,buyerName string) error {
  
 	 // save the asset with the new owner
 	 asset.OwnerOrg = buyerOrgID
- 
+	 asset.Owner = buyerName
+
 	 updatedAssetJSON, _ := json.Marshal(asset)
  
 	 err := ctx.GetStub().PutState(asset.ID, updatedAssetJSON)
@@ -435,7 +452,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 }
  
 	 // Delete the price records for seller
-	 assetPriceKey, err := ctx.GetStub().CreateCompositeKey(typeAssetForSale, []string{asset.ID})
+	 assetPriceKey, err := ctx.GetStub().CreateCompositeKey(typeAssetForSale, []string{asset.ID, ownerName} )
 	 if err != nil {
 		 return fmt.Errorf("failed to create composite key for seller: %s", err.Error())
 	 }
@@ -446,7 +463,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 }
  
 	 // Delete the price records for buyer
-	 assetPriceKey, err = ctx.GetStub().CreateCompositeKey(typeAssetBid, []string{asset.ID})
+	 assetPriceKey, err = ctx.GetStub().CreateCompositeKey(typeAssetBid, []string{asset.ID, buyerName})
 	 if err != nil {
 		 return fmt.Errorf("failed to create composite key for buyer: %s", err.Error())
 	 }
@@ -589,11 +606,18 @@ func (s *SmartContract) ReadAsset(ctx contractapi.TransactionContextInterface, a
 }
 
 // GetAssetPrivateProperties returns the immutable asset properties from owner's private data collection
-func (s *SmartContract) GetAssetPrivateProperties(ctx contractapi.TransactionContextInterface, assetID string) (string, error) {
+func (s *SmartContract) GetAssetPrivateProperties(ctx contractapi.TransactionContextInterface, assetID string, requesterName string) (string, error) {
 	// In this scenario, client is only authorized to read/write private data from its own peer.
 	collection, err := getClientImplicitCollectionName(ctx)
 	if err != nil {
 		return "", err
+	}
+
+	asset, err := s.ReadAsset(ctx, assetID)
+	 
+	 //owner name check 
+	 if requesterName != asset.Owner {
+		return "", fmt.Errorf("a client %s cannot read the private details of a asset owned by %s", requesterName, asset.Owner)
 	}
 
 	immutableProperties, err := ctx.GetStub().GetPrivateData(collection, assetID)
@@ -608,23 +632,30 @@ func (s *SmartContract) GetAssetPrivateProperties(ctx contractapi.TransactionCon
 }
 
 // GetAssetSalesPrice returns the sales price
-func (s *SmartContract) GetAssetSalesPrice(ctx contractapi.TransactionContextInterface, assetID string) (string, error) {
-	return getAssetPrice(ctx, assetID, typeAssetForSale)
+func (s *SmartContract) GetAssetSalesPrice(ctx contractapi.TransactionContextInterface, assetID string, ownerName string) (string, error) {
+	asset, _ := s.ReadAsset(ctx, assetID)
+	 
+	 //owner name check 
+	 if ownerName != asset.Owner {
+		return "", fmt.Errorf("a client %s cannot read the private details of a asset owned by %s", ownerName, asset.Owner)
+	}
+	return getAssetPrice(ctx, assetID, typeAssetForSale, ownerName)
 }
 
 // GetAssetBidPrice returns the bid price
-func (s *SmartContract) GetAssetBidPrice(ctx contractapi.TransactionContextInterface, assetID string) (string, error) {
-	return getAssetPrice(ctx, assetID, typeAssetBid)
+func (s *SmartContract) GetAssetBidPrice(ctx contractapi.TransactionContextInterface, assetID string,buyerName string) (string, error) {
+	return getAssetPrice(ctx, assetID, typeAssetBid, buyerName)
 }
 
 // getAssetPrice gets the bid or ask price from caller's implicit private data collection
-func getAssetPrice(ctx contractapi.TransactionContextInterface, assetID string, priceType string) (string, error) {
+func getAssetPrice(ctx contractapi.TransactionContextInterface, assetID string, priceType string, requesterName string) (string, error) {
+	
 	collection, err := getClientImplicitCollectionName(ctx)
 	if err != nil {
 		return "", err
 	}
 
-	assetPriceKey, err := ctx.GetStub().CreateCompositeKey(priceType, []string{assetID})
+	assetPriceKey, err := ctx.GetStub().CreateCompositeKey(priceType, []string{assetID,requesterName})
 	if err != nil {
 		return "", fmt.Errorf("failed to create composite key: %v", err)
 	}
@@ -639,6 +670,7 @@ func getAssetPrice(ctx contractapi.TransactionContextInterface, assetID string, 
 
 	return string(price), nil
 }
+
 // QueryAssetSaleAgreements returns all of an organization's proposed sales
 func (s *SmartContract) QueryAssetSaleAgreements(ctx contractapi.TransactionContextInterface) ([]Agreement, error) {
 	return queryAgreementsByType(ctx, typeAssetForSale)
