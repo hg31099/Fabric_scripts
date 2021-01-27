@@ -6,7 +6,7 @@ const logger = log4js.getLogger('BasicNetwork');
 const util = require('util')
 
 const helper = require('./helper')
-const query = async (channelName, chaincodeName, args, fcn, username, org_name) => {
+const query = async (channelName, chaincodeName, args, fcn, peers, username, org_name) => {
 
     try {
         console.log(`arguments type is------------------------------------------------------------- ${typeof args}`)
@@ -49,16 +49,23 @@ const query = async (channelName, chaincodeName, args, fcn, username, org_name) 
             console.log(`arguments type is------------------------------------------------------------- ${typeof args}`)
             console.log(`length of args is------------------------------------------------------------ ${args.length}`)
             result = await contract.evaluateTransaction(fcn, args[0], username);
-
+            // result = await contract.createTransaction(fcn)
+            //                     .setEndorsingPeers(peers)
+            //                     .evaluate(args[0], username)
         } 
         else if(fcn == "ReadAsset" || fcn=='QueryAssetHistory' )
         {
             result = await contract.evaluateTransaction(fcn, args[0]);
+            // result = await contract.createTransaction(fcn)
+            //                     .setEndorsingPeers(peers)
+            //                     .evaluate(args[0])
         }
         else if (fcn == "QueryAssetSaleAgreements" || fcn == "QueryAssetBuyAgreements") {
             result = await contract.evaluateTransaction(fcn);
+            // result = await contract.createTransaction(fcn)
+            //                     .setEndorsingPeers(peers)
+            //                     .evaluate()
             // return result
-
         }
 
         console.log(result)

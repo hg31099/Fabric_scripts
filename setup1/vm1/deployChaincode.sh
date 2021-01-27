@@ -3,6 +3,10 @@ export ORDERER_CA=${PWD}/../vm4/crypto-config/ordererOrganizations/example.com/o
 export PEER0_FARMERSASSOCIATION_CA=${PWD}/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt
 export PEER0_WHOLESALERSASSOCIATION_CA=${PWD}/../vm2/crypto-config/peerOrganizations/wholesalersAssociation.example.com/peers/peer0.wholesalersAssociation.example.com/tls/ca.crt
 export PEER0_RETAILERSASSOCIATION_CA=${PWD}/../vm3/crypto-config/peerOrganizations/retailersAssociation.example.com/peers/peer0.retailersAssociation.example.com/tls/ca.crt
+
+export PEER1_FARMERSASSOCIATION_CA=${PWD}/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer1.farmersAssociation.example.com/tls/ca.crt
+export PEER1_WHOLESALERSASSOCIATION_CA=${PWD}/../vm2/crypto-config/peerOrganizations/wholesalersAssociation.example.com/peers/peer1.wholesalersAssociation.example.com/tls/ca.crt
+export PEER1_RETAILERSASSOCIATION_CA=${PWD}/../vm3/crypto-config/peerOrganizations/retailersAssociation.example.com/peers/peer1.retailersAssociation.example.com/tls/ca.crt
 export FABRIC_CFG_PATH=${PWD}/../../artifacts/channel/config/
 export CC_END_POLICY="OR('FarmersAssociationMSP.peer','WholesalersAssociationMSP.peer','RetailersAssociationMSP.peer')"
 export ASSET_PROPERTIES=$(echo -n "{\"object_type\":\"asset_properties\",\"assetID\":\"r1\",\"quantity\":\"100\",\"unit\":\"kg\",\"quality\":\"5\",\"tradeID\":\"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3\"}" | base64 | tr -d \\n)
@@ -19,7 +23,7 @@ setGlobalsForPeer0FarmersAssociation() {
 
 setGlobalsForPeer1FarmersAssociation() {
     export CORE_PEER_LOCALMSPID="FarmersAssociationMSP"
-    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_FARMERSASSOCIATION_CA
+    export CORE_PEER_TLS_ROOTCERT_FILE=$PEER1_FARMERSASSOCIATION_CA
     export CORE_PEER_MSPCONFIGPATH=${PWD}/crypto-config/peerOrganizations/farmersAssociation.example.com/users/Admin@farmersAssociation.example.com/msp
     export CORE_PEER_ADDRESS=localhost:8051
 
@@ -56,7 +60,7 @@ VERSION="1"
 CC_SRC_PATH="./../../artifacts/src/github.com/fabasset/go"
 CC_NAME="fabasset"
 
-packageChaincode() {
+packageChaincodepeer0() {
     rm -rf ${CC_NAME}.tar.gz
     setGlobalsForPeer0FarmersAssociation
     peer lifecycle chaincode package ${CC_NAME}.tar.gz \
@@ -64,18 +68,36 @@ packageChaincode() {
         --label ${CC_NAME}_${VERSION}
     echo "===================== Chaincode is packaged on peer0.farmersAssociation ===================== "
 }
-# packageChaincode
+# packageChaincode peer0
 
-installChaincode() {
+installChaincodepeer0() {
     setGlobalsForPeer0FarmersAssociation
     peer lifecycle chaincode install ${CC_NAME}.tar.gz
     echo "===================== Chaincode is installed on peer0.farmersAssociation ===================== "
 
 }
+# installChaincode peer0
 
-# installChaincode
+packageChaincodepeer1() {
+    rm -rf ${CC_NAME}.tar.gz
+    setGlobalsForPeer1FarmersAssociation
+    peer lifecycle chaincode package ${CC_NAME}.tar.gz \
+        --path ${CC_SRC_PATH} --lang ${CC_RUNTIME_LANGUAGE} \
+        --label ${CC_NAME}_${VERSION}
+    echo "===================== Chaincode is packaged on peer1.farmersAssociation ===================== "
+}
+# packageChaincode peer1
 
-queryInstalled() {
+installChaincodepeer1() {
+    setGlobalsForPeer1FarmersAssociation
+    peer lifecycle chaincode install ${CC_NAME}.tar.gz
+    echo "===================== Chaincode is installed on peer1.farmersAssociation ===================== "
+
+}
+# installChaincode peer1
+
+
+queryInstalledpeer0() {
     setGlobalsForPeer0FarmersAssociation
     peer lifecycle chaincode queryinstalled >&log.txt
     cat log.txt
@@ -83,8 +105,18 @@ queryInstalled() {
     echo PackageID is ${PACKAGE_ID}
     echo "===================== Query installed successful on peer0.farmersAssociation on channel ===================== "
 }
+# queryInstalled peer0
 
-# queryInstalled
+queryInstalledpeer1() {
+    setGlobalsForPeer1FarmersAssociation
+    peer lifecycle chaincode queryinstalled >&log.txt
+    cat log.txt
+    PACKAGE_ID=$(sed -n "/${CC_NAME}_${VERSION}/{s/^Package ID: //; s/, Label:.*$//; p;}" log.txt)
+    echo PackageID is ${PACKAGE_ID}
+    echo "===================== Query installed successful on peer1.farmersAssociation on channel ===================== "
+}
+
+# queryInstalled peer1
 
 approveForMyFarmersAssociation() {
     setGlobalsForPeer0FarmersAssociation
@@ -190,11 +222,15 @@ chaincodeQuery() {
 # Run this function if you add any new dependency in chaincode
 
 presetup $1
-packageChaincode $1
-installChaincode $1
-queryInstalled $1
+packageChaincodepeer0 $1
+installChaincodepeer0 $1
+packageChaincodepeer1 $1
+installChaincodepeer1 $1
+
+queryInstalledpeer0 $1
+queryInstalledpeer1 $1
 approveForMyFarmersAssociation $1
-# chaincodeQuery
+chaincodeQuery
 
 # docker exec -i cli bash < ./cli_1.sh
 # sleep 3

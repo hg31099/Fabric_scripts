@@ -199,6 +199,10 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 return agreeToPrice(ctx, assetID, typeAssetBid, buyerName)
  }
  
+func (s *SmartContract) GetBids(ctx contractapi.TransactionContextInterface, assetID string) error {
+	
+}
+
  // agreeToPrice adds a bid or ask price to caller's implicit private data collection
  func agreeToPrice(ctx contractapi.TransactionContextInterface, assetID string, priceType string, requesterName string) error {
  
