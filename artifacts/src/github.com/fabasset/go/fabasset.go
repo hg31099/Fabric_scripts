@@ -38,6 +38,7 @@ type Agreement struct {
 	TradeID string `json:"tradeID"`
 	Quantity int   `json:"quantity"`
 }
+
  //---------------------------------
  // Asset struct and properties must be exported (start with capitals) to work with contract api metadata
  type Asset struct {
@@ -78,6 +79,10 @@ type privateAsset struct {
 	Price     				int `json:"price"`
 	Timestamp 				time.Time `json:"timestamp"`
  }
+ type CompleteAsset struct{
+	Assetq Asset
+	Batchq Batch
+}
 
  // Init ;  Method for initializing smart contract
 func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error {
@@ -680,7 +685,7 @@ func (s *SmartContract) ReadAsset(ctx contractapi.TransactionContextInterface, a
 	return asset, nil
 }
 
-func (s *SmartContract) ReadCompleteAsset(ctx contractapi.TransactionContextInterface, assetID string) (*Asset,*Batch) {
+func (s *SmartContract) ReadCompleteAsset(ctx contractapi.TransactionContextInterface, assetID string) (*CompleteAsset,error) {
 	// Since only public data is accessed in this function, no access control is required
 
 	asset, err := s.ReadAsset(ctx, assetID)
@@ -700,7 +705,12 @@ func (s *SmartContract) ReadCompleteAsset(ctx contractapi.TransactionContextInte
 	if err != nil {
 		return nil,nil
 	}
-	return asset,batch
+	var completeAsset *CompleteAsset
+	 *completeAsset= CompleteAsset{
+		Assetq : *asset,
+		Batchq : *batch,
+	}
+	return completeAsset,nil
 }
 
 
