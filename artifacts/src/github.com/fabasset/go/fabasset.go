@@ -688,7 +688,7 @@ func (s *SmartContract) ReadAsset(ctx contractapi.TransactionContextInterface, a
 func (s *SmartContract) ReadCompleteAsset(ctx contractapi.TransactionContextInterface, assetID string) (*CompleteAsset,error) {
 	// Since only public data is accessed in this function, no access control is required
 
-	var asst *Asset
+	var asset *Asset
 	*asset, err := s.ReadAsset(ctx, assetID)
 
 	var batchID = asset.BatchID

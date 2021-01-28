@@ -54,9 +54,9 @@ queryCommitted() {
 }
 
 
-# docker exec -i cli bash < ./cli_1.sh
-# sleep 3
-# queryCommitted
+docker exec -i cli bash < ./cli_1.sh
+sleep 3
+queryCommitted
 sleep 3
 docker exec -i cli bash < ./cli_2.sh
 # sleep 3
