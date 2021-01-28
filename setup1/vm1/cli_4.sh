@@ -22,13 +22,13 @@ export ASSET_PRICE=$(echo -n "{\"object_type\":\"asset_price\",\"assetID\":\"r1\
 
 sleep 3
 
-peer chaincode invoke -o orderer.example.com:7050 \
---ordererTLSHostnameOverride orderer.example.com \
---tls \
---cafile /etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
--C $CHANNEL_NAME -n ${CC_NAME} \
---peerAddresses peer0.farmersAssociation.example.com:7051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt \
---peerAddresses peer0.wholesalersAssociation.example.com:9051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/wholesalersAssociation.example.com/peers/peer0.wholesalersAssociation.example.com/tls/ca.crt \
+# peer chaincode invoke -o orderer.example.com:7050 \
+# --ordererTLSHostnameOverride orderer.example.com \
+# --tls \
+# --cafile /etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+# -C $CHANNEL_NAME -n ${CC_NAME} \
+# --peerAddresses peer0.farmersAssociation.example.com:7051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt \
+# --peerAddresses peer0.wholesalersAssociation.example.com:9051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/wholesalersAssociation.example.com/peers/peer0.wholesalersAssociation.example.com/tls/ca.crt \
 -c '{"function": "TransferAsset","Args":["r1","WholesalersAssociationMSP","WholesalerCli1"]}' --transient "{\"asset_price\":\"$ASSET_PRICE\", \"asset_properties\":\"$ASSET_PROPERTIES\"}"
 # -c '{"function": "AgreeToSell","Args":["r1"]}' --transient "{\"asset_price\":\"$ASSET_PRICE\"}"
 
@@ -51,4 +51,4 @@ peer chaincode invoke -o orderer.example.com:7050 \
 
 sleep 3
 
-# peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "queryAsset","Args":["r1"]}'
+peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "queryAsset","Args":["r1"]}'
