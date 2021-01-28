@@ -8,8 +8,14 @@ const util = require('util')
 // const createTransactionEventHandler = require('./MyTransactionEventHandler.ts')
 
 const helper = require('./helper')
-
-
+var uniqueID = (function() {
+  var id = 1; // This is the private persistent value
+  // The outer function returns a nested function that has access
+  // to the persistent value.  It is this nested function we're storing
+  // in the variable uniqueID above.
+  return function() { return id++; };  // Return and increment
+})(); // Invoke the outer function after defining it.
+var counter
 const invokeTransaction = async (channelName, chaincodeName, fcn, args, username, org_name, transientData, peers) => {
     try {               
         logger.debug(util.format('\n============ invoke transaction on channel %s ============\n', channelName));
@@ -64,6 +70,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
         let result
         let message;
         if (fcn == "CreateAsset") {
+          
             console.log(`Transient data is : ${transientData}`)
             let tstring=JSON.stringify(transientData)
             let assetData = JSON.parse(tstring)
@@ -72,7 +79,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             let key = Object.keys(assetData)[0]
             const transientDataBuffer = {}
             // transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_properties))
-
+            counter=uniqueID()
             console.log(JSON.stringify(assetData.asset_properties) )
             const orderedTransient = Object.keys(assetData.asset_properties).sort().reduce(
                 (obj, key) => { 
@@ -87,7 +94,10 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
-                        .submit(args[0], args[1], args[2], args[3], args[4], args[5], args[6], username)
+                        .submit(args[0], args[1], args[2], args[3], args[4], args[5], args[6], username,counter.toString())
+            // counter=counter+1
+
+          
             message = `Successfully added the asset asset with key ${args[0]}`
 
         } else if ( fcn == "TransferAsset") {
@@ -124,7 +134,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
-                        .submit(args[0], args[1],args[2],username)
+                        .submit(args[0], args[1],args[2],username,args[3],args[4])
             message = `Successfully executed the function`
         } else if (fcn == "AgreeToSell" || fcn == "AgreeToBuy") {
             console.log(`Transient data is : ${transientData}`)
@@ -189,11 +199,13 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
         // result = JSON.parse(result.toString());
 
         let response = {
-            message: message
+            message: message,
+            result: result
          
         }
         return response;
 
+        
 
     } catch (error) {
 

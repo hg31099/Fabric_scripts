@@ -17,6 +17,7 @@ peer chaincode upgrade -o orderer.example.com:7050 \
 -C trustflow -n fabasset \
 -v ${VERSION} \
 --peerAddresses peer0.farmersAssociation.example.com:7051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt \
--c '{"function": "CreateAsset","Args":["r1", "Rice", "Basmati", "hyderabadi", "grain", "true", "open to sell","FarmerCli1"]}' --transient "{\"asset_properties\":\"$ASSET_PROPERTIES\"}"
+-c '{"function": "ReadAsset","Args":["p1"]}'
+# -c '{"function": "CreateAsset","Args":["r1", "Rice", "Basmati", "hyderabadi", "grain", "true", "open to sell","FarmerCli1"]}' --transient "{\"asset_properties\":\"$ASSET_PROPERTIES\"}"
 # --peerAddresses peer0.wholesalersAssociation.example.com:9051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/wholesalersAssociation.example.com/peers/peer0.wholesalersAssociation.example.com/tls/ca.crt \
 # --peerAddresses peer0.retailersAssociation.example.com:11051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/retailersAssociation.example.com/peers/peer0.retailersAssociation.example.com/tls/ca.crt \

@@ -53,7 +53,14 @@ const query = async (channelName, chaincodeName, args, fcn, peers, username, org
             //                     .setEndorsingPeers(peers)
             //                     .evaluate(args[0], username)
         } 
-        else if(fcn == "ReadAsset" || fcn=='QueryAssetHistory' )
+        else if(fcn == "ReadAsset" )
+        {
+            result = await contract.evaluateTransaction(fcn, args[0],true);
+            // result = await contract.createTransaction(fcn)
+            //                     .setEndorsingPeers(peers)
+            //                     .evaluate(args[0])
+        }
+        else if(fcn=='QueryAssetHistory' )
         {
             result = await contract.evaluateTransaction(fcn, args[0]);
             // result = await contract.createTransaction(fcn)

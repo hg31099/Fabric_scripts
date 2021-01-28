@@ -7,10 +7,11 @@
 	 "fmt"
 	 "time"
 	 "log"
-	 "github.com/golang/protobuf/ptypes"
+	//  "github.com/golang/protobuf/ptypes"
 	 "github.com/hyperledger/fabric-chaincode-go/pkg/statebased"
 	 "github.com/hyperledger/fabric-chaincode-go/shim"
 	 "github.com/hyperledger/fabric-contract-api-go/contractapi"
+
  )
   
  const (
@@ -25,38 +26,57 @@
  }
 
 // QueryResult structure used for handling result of query
-type QueryResult struct {
-	Record    *Asset
-	TxId      string    `json:"txId"`
-	Timestamp time.Time `json:"timestamp"`
-}
+// type QueryResult struct {
+// 	Record    *Asset
+// 	TxId      string    `json:"txId"`
+// 	Timestamp time.Time `json:"timestamp"`
+// }
 
 type Agreement struct {
 	ID      string `json:"assetID"`
 	Price   int    `json:"price"`
 	TradeID string `json:"tradeID"`
+	Quantity int   `json:"quantity"`
 }
  //---------------------------------
  // Asset struct and properties must be exported (start with capitals) to work with contract api metadata
  type Asset struct {
 	ID					string `json:"assetID"`
 	Item   				string `json:"item"`
-	Subtype1   			string `json:"subtype1"`
-	Subtype2   			string `json:"subtype2"`
-	// Quantity   			string `json:"quantity"`
-	// QuantityUnit  		string `json:"quantityunit"`
-	// Quality      		string `json:"quality"`
-	AssetType   		string `json:"type"`
-	Organic   			string `json:"organic"`
 	Owner   			string `json:"owner"`
 	PublicDescription 	string `json:"publicDescription"`
 	CreationTimestamp   time.Time `json:"creationtimestamp"`
 	OwnerOrg          	string `json:"ownerOrg"`
+	Parent				string `json:"parent"`
+	BatchID				string `json:"batchID"`
 }
- 
+
+type Batch struct{
+	BatchID 			string `json:"batchID"`
+	Item   				string `json:"item"`
+	Subtype1   			string `json:"subtype1"`
+	Subtype2   			string `json:"subtype2"`
+	AssetType   		string `json:"type"`
+	Organic   			string `json:"organic"`
+}
+
+type privateAsset struct {
+	ObjectType			string `json:"object_type"`
+	ID   				string `json:"assetID"`
+	Quantity   			int `json:"quantity"`
+	Unit  				string `json:"unit"`
+	Quality      		string `json:"quality"`
+	Salt 		   		string `json:"salt"`
+}
+
  type receipt struct {
-	 price     int
-	 timestamp time.Time
+	SellerAssetID			string `json:"sellerAssetID"`
+	BuyerAssetID			string `json:"buyerAssetID"`
+	SellerName				string `json:"sellerName"`
+	BuyerName				string `json:"buyerName"`
+	Quantity				int `json:"quantity"`
+	Price     				int `json:"price"`
+	Timestamp 				time.Time `json:"timestamp"`
  }
 
  // Init ;  Method for initializing smart contract
@@ -65,13 +85,13 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 }
  
  // CreateAsset creates a asset and sets it as owned by the client's org
- func (s *SmartContract) CreateAsset(ctx contractapi.TransactionContextInterface, a0 string, a1 string, a2 string, a3 string, a4 string, a5 string, a6 string, ownerName string) error {
+ func (s *SmartContract) CreateAsset(ctx contractapi.TransactionContextInterface, a0 string, a1 string, a2 string, a3 string, a4 string, a5 string, a6 string, ownerName string, batchID string) error {
  
 	 transMap, err := ctx.GetStub().GetTransient()
 	 if err != nil {
 		 return fmt.Errorf("Error getting transient: " + err.Error())
 	 }
- 
+	 
 	 // Asset properties are private, therefore they get passed in transient field
 	 immutablePropertiesJSON, ok := transMap["asset_properties"]
 	 if !ok {
@@ -95,22 +115,43 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		//  PublicDescription: publicDescription,
 		 ID:					a0,
 		 Item:   				a1,
-		 Subtype1:   			a2,
-		 Subtype2:   			a3,
+		//  Subtype1:   			a2,
+		//  Subtype2:   			a3,
 		 // Quantity   			string `json:"quantity"`
 		 // QuantityUnit  		string `json:"quantityunit"`
 		 // Quality      		string `json:"quality"`
-		 AssetType:   			a4,
-		 Organic:   			a5,
+		//  AssetType:   			a4,
+		//  Organic:   			a5,
 		 PublicDescription: 	a6,
 		 Owner:   				ownerName,
 		 CreationTimestamp:  	x,
 		 OwnerOrg:          	clientOrgID,
+		 Parent:	"",
+		 BatchID: batchID,
 	 }
- 
+	 
+	 batch :=Batch{
+		BatchID: batchID,
+		Item:	a1,			
+		Subtype1:  a2, 			
+		Subtype2:   a3,			
+		AssetType:   	a4,	
+		Organic:   a5,
+	 }
+
+	 batchJSON, err := json.Marshal(batch)
+	 if err != nil {
+		 return fmt.Errorf("failed to create batch in JSON: %s", err.Error())
+	 }
+
 	 assetJSON, err := json.Marshal(asset)
 	 if err != nil {
 		 return fmt.Errorf("failed to create asset JSON: %s", err.Error())
+	 }
+
+	 err = ctx.GetStub().PutState(batch.BatchID, batchJSON)
+	 if err != nil {
+		 return fmt.Errorf("failed to put Batch in public data: %s", err.Error())
 	 }
  
 	 err = ctx.GetStub().PutState(asset.ID, assetJSON)
@@ -144,7 +185,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return fmt.Errorf("failed to get verified OrgID: %s", err.Error())
 	 }
 	 
-	 asset, err := s.ReadAsset(ctx, assetID)
+	 asset,_, err := s.ReadAsset(ctx, assetID, false)
 	 if err != nil {
 		 return fmt.Errorf("failed to get asset: %s", err.Error())
 	 }
@@ -172,7 +213,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  // AgreeToSell adds seller's asking price to seller's implicit private data collection
  func (s *SmartContract) AgreeToSell(ctx contractapi.TransactionContextInterface, assetID string,ownerName string) error {
 	 // Query asset and verify that this clientOrgId actually owns the asset.
-	 asset, err := s.ReadAsset(ctx, assetID)
+	 asset,_, err := s.ReadAsset(ctx, assetID, false)
 	 if err != nil {
 		 return err
 	 }
@@ -198,10 +239,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  func (s *SmartContract) AgreeToBuy(ctx contractapi.TransactionContextInterface, assetID string, buyerName string) error {
 	 return agreeToPrice(ctx, assetID, typeAssetBid, buyerName)
  }
- 
-func (s *SmartContract) GetBids(ctx contractapi.TransactionContextInterface, assetID string) error {
-	
-}
+
 
  // agreeToPrice adds a bid or ask price to caller's implicit private data collection
  func agreeToPrice(ctx contractapi.TransactionContextInterface, assetID string, priceType string, requesterName string) error {
@@ -257,7 +295,7 @@ func (s *SmartContract) GetBids(ctx contractapi.TransactionContextInterface, ass
 		 return false, fmt.Errorf("asset_properties key not found in the transient map")
 	 }
  
-	 asset, err := s.ReadAsset(ctx, assetID)
+	 asset,_, err := s.ReadAsset(ctx, assetID, false)
 	 if err != nil {
 		 return false, fmt.Errorf("failed to get asset: %s", err.Error())
 	 }
@@ -286,61 +324,62 @@ func (s *SmartContract) GetBids(ctx contractapi.TransactionContextInterface, ass
  
  // TransferAsset checks transfer conditions and then transfers asset state to buyer.
  // TransferAsset can only be called by current owner
- func (s *SmartContract) TransferAsset(ctx contractapi.TransactionContextInterface, assetID string, buyerOrgID string, buyerName string, ownerName string) error {
+ func (s *SmartContract) TransferAsset(ctx contractapi.TransactionContextInterface, assetID string, buyerOrgID string, buyerName string, ownerName string,splitAssetID string,buyQuantity int) (*receipt, error) {
  
 	 // Get client org id and verify it matches peer org id.
 	 // For a transfer, selling client must get endorsement from their own peer and from buyer peer, therefore don't verify client org id matches peer org id
 	 clientOrgID, err := getClientOrgID(ctx, false)
 	 if err != nil {
-		 return fmt.Errorf("failed to get verified OrgID: %s", err.Error())
+		 return nil,fmt.Errorf("failed to get verified OrgID: %s", err.Error())
 	 }
-	 asset, err := s.ReadAsset(ctx, assetID)
+	 asset,_, err := s.ReadAsset(ctx, assetID,false)
 	 if err != nil {
-		 return err
+		 return nil,err
 	 }
 	 //owner name check 
 	 if ownerName != asset.Owner {
-		return fmt.Errorf("a client %s cannot transfer a asset owned by %s", ownerName, asset.Owner)
+		return nil,fmt.Errorf("a client %s cannot transfer a asset owned by %s", ownerName, asset.Owner)
 	}
 
 	 transMap, err := ctx.GetStub().GetTransient()
 	 if err != nil {
-		 return fmt.Errorf("Error getting transient: " + err.Error())
+		 return nil,fmt.Errorf("Error getting transient: " + err.Error())
 	 }
  
 	 immutablePropertiesJSON, ok := transMap["asset_properties"]
 	 if !ok {
-		 return fmt.Errorf("asset_properties key not found in the transient map")
+		 return nil,fmt.Errorf("asset_properties key not found in the transient map")
 	 }
  
 	 priceJSON, ok := transMap["asset_price"]
 	 if !ok {
-		 return fmt.Errorf("asset_price key not found in the transient map")
+		 return nil,fmt.Errorf("asset_price key not found in the transient map")
 	 }
  
 	 var agreement Agreement
 	 err = json.Unmarshal([]byte(priceJSON), &agreement)
 	 if err != nil {
-		 return fmt.Errorf("failed to unmarshal price JSON: %s", err.Error())
+		 return nil,fmt.Errorf("failed to unmarshal price JSON: %s", err.Error())
 	 }
  
  
-	 err = verifyTransferConditions(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, priceJSON,ownerName, buyerName)
+	 err = verifyTransferConditions(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, priceJSON,ownerName, buyerName,agreement.Quantity,buyQuantity)
 	 if err != nil {
-		 return fmt.Errorf("failed transfer verification: %s", err.Error())
+		 return nil,fmt.Errorf("failed transfer verification: %s", err.Error())
 	 }
- 
-	 err = transferAssetState(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, agreement.Price, ownerName, buyerName)
+
+	 var invoice *receipt 
+	 invoice , err = transferAssetState(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, agreement.Price, ownerName, buyerName, buyQuantity,splitAssetID)
 	 if err != nil {
-		 return fmt.Errorf("failed asset transfer: %s", err.Error())
+		 return nil,fmt.Errorf("failed asset transfer: %s", err.Error())
 	 }
  
-	 return nil
+	 return invoice, nil
  
  }
  
  // verifyTransferConditions checks that client org currently owns asset and that both parties have agreed on price
- func verifyTransferConditions(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, priceJSON []byte, ownerName string, buyerName string) error {
+ func verifyTransferConditions(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, priceJSON []byte, ownerName string, buyerName string,sellerQuantity int,buyerQuanity int) error {
  
 	//CHECK 0: owner name check, seller owns the asset 
 	if ownerName != asset.Owner {
@@ -373,7 +412,7 @@ func (s *SmartContract) GetBids(ctx contractapi.TransactionContextInterface, ass
 	 if !bytes.Equal(immutablePropertiesOnChainHash, calculatedPropertiesHash) {
 		 return fmt.Errorf("hash %x for passed immutable properties %s does not match on-chain hash %x", calculatedPropertiesHash, immutablePropertiesJSON, immutablePropertiesOnChainHash)
 	 }
- 
+	 
 	 // CHECK3: verify that seller and buyer agreed on the same price
  
 	 // get seller (current owner) asking price
@@ -417,104 +456,133 @@ func (s *SmartContract) GetBids(ctx contractapi.TransactionContextInterface, ass
 	 if !bytes.Equal(calculatedPriceHash, buyerPriceHash) {
 		 return fmt.Errorf("hash %x for passed price JSON %s does not match on-chain hash %x, buyer hasn't agreed to the passed trade id and price", calculatedPriceHash, priceJSON, buyerPriceHash)
 	 }
+
+	 //CHECK4: verify whether buying quanity is available or not with seller
+	 if(sellerQuantity<buyerQuanity){
+		return fmt.Errorf("Not Enough quantity available for sell")
+	 }
  
 	 // since all checks passed, return without an error
 	 return nil
  }
- 
+
  // transferAssetState makes the public and private state updates for the transferred asset
- func transferAssetState(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, price int, ownerName string,buyerName string) error {
+ func transferAssetState(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, price int, ownerName string,buyerName string, quantity int,splitAssetID string) (*receipt , error) {
  
 	 // save the asset with the new owner
-	 asset.OwnerOrg = buyerOrgID
-	 asset.Owner = buyerName
 
-	 updatedAssetJSON, _ := json.Marshal(asset)
+	 var splitAsset *Asset
+
+	 splitAsset = asset
+	 splitAsset.ID = splitAssetID	
+	 splitAsset.OwnerOrg = buyerOrgID
+	 splitAsset.Owner = buyerName
+	 splitAssetJSON, _ := json.Marshal(splitAsset)
  
-	 err := ctx.GetStub().PutState(asset.ID, updatedAssetJSON)
+	 err := ctx.GetStub().PutState(splitAsset.ID, splitAssetJSON)
 	 if err != nil {
-		 return fmt.Errorf("failed to write asset for buyer: %s", err.Error())
+		 return nil,fmt.Errorf("failed to write asset for buyer: %s", err.Error())
 	 }
  
 	 // Change the endorsement policy to the new owner
-	 err = setAssetStateBasedEndorsement(ctx, asset.ID, buyerOrgID)
+	 err = setAssetStateBasedEndorsement(ctx, splitAsset.ID, buyerOrgID)
 	 if err != nil {
-		 return fmt.Errorf("failed setting state based endorsement for new owner: %s", err.Error())
+		 return nil,fmt.Errorf("failed setting state based endorsement for new owner: %s", err.Error())
 	 }
- 
-	 // Transfer the private properties (delete from seller collection, create in buyer collection)
-	 collectionSeller := buildCollectionName(clientOrgID)
-	 err = ctx.GetStub().DelPrivateData(collectionSeller, asset.ID)
+	 
+	 var newprivateasset privateAsset
+	 var updatedprivateasset privateAsset
+
+	 err = json.Unmarshal([]byte(immutablePropertiesJSON), &newprivateasset)
 	 if err != nil {
-		 return fmt.Errorf("failed to delete Asset private details from seller: %s", err.Error())
+		 return nil,fmt.Errorf("failed to unmarshal private asset JSON: %s", err.Error())
 	 }
- 
+
+	 updatedprivateasset = newprivateasset
+	 updatedprivateasset.Quantity = updatedprivateasset.Quantity - quantity
+
+	 newprivateasset.ID = splitAssetID
+	 newprivateasset.Quantity = quantity
+
+	 newprivateassetJSON, _ := json.Marshal(newprivateasset)
+	 updatedprivateassetJSON, _ := json.Marshal(updatedprivateasset)
+
 	 collectionBuyer := buildCollectionName(buyerOrgID)
-	 err = ctx.GetStub().PutPrivateData(collectionBuyer, asset.ID, immutablePropertiesJSON)
+	 err = ctx.GetStub().PutPrivateData(collectionBuyer, splitAsset.ID, newprivateassetJSON)
 	 if err != nil {
-		 return fmt.Errorf("failed to put Asset private properties for buyer: %s", err.Error())
+		 return nil,fmt.Errorf("failed to put Asset private properties for buyer: %s", err.Error())
 	 }
- 
+	 collectionSeller := buildCollectionName(clientOrgID)
+	 err = ctx.GetStub().PutPrivateData(collectionSeller, asset.ID, updatedprivateassetJSON)
+	 if err != nil {
+		 return nil,fmt.Errorf("failed to update Asset private properties for seller: %s", err.Error())
+	 }
 	 // Delete the price records for seller
 	 assetPriceKey, err := ctx.GetStub().CreateCompositeKey(typeAssetForSale, []string{asset.ID, ownerName} )
 	 if err != nil {
-		 return fmt.Errorf("failed to create composite key for seller: %s", err.Error())
+		 return nil,fmt.Errorf("failed to create composite key for seller: %s", err.Error())
 	 }
  
 	 err = ctx.GetStub().DelPrivateData(collectionSeller, assetPriceKey)
 	 if err != nil {
-		 return fmt.Errorf("failed to delete asset price from implicit private data collection for seller: %s", err.Error())
+		 return nil,fmt.Errorf("failed to delete asset price from implicit private data collection for seller: %s", err.Error())
 	 }
  
 	 // Delete the price records for buyer
 	 assetPriceKey, err = ctx.GetStub().CreateCompositeKey(typeAssetBid, []string{asset.ID, buyerName})
 	 if err != nil {
-		 return fmt.Errorf("failed to create composite key for buyer: %s", err.Error())
+		 return nil,fmt.Errorf("failed to create composite key for buyer: %s", err.Error())
 	 }
  
 	 err = ctx.GetStub().DelPrivateData(collectionBuyer, assetPriceKey)
 	 if err != nil {
-		 return fmt.Errorf("failed to delete asset price from implicit private data collection for buyer: %s", err.Error())
+		 return nil,fmt.Errorf("failed to delete asset price from implicit private data collection for buyer: %s", err.Error())
 	 }
  
 	 // Keep record for a 'receipt' in both buyer and seller private data collection to record the sales price and date
 	 // Persist the agreed to price in a collection sub-namespace based on receipt key prefix
 	 receiptBuyKey, err := ctx.GetStub().CreateCompositeKey(typeAssetBuyReceipt, []string{asset.ID, ctx.GetStub().GetTxID()})
 	 if err != nil {
-		 return fmt.Errorf("failed to create composite key for receipt: %s", err.Error())
+		 return nil,fmt.Errorf("failed to create composite key for receipt: %s", err.Error())
 	 }
  
 	 timestmp, err := ctx.GetStub().GetTxTimestamp()
 	 if err != nil {
-		 return fmt.Errorf("failed to create timestamp for receipt: %s", err.Error())
+		 return nil,fmt.Errorf("failed to create timestamp for receipt: %s", err.Error())
 	 }
- 
-	 assetReceipt := receipt{
-		 price:     price,
-		 timestamp: time.Unix(timestmp.Seconds, int64(timestmp.Nanos)),
+	
+	 var assetReceipt *receipt 
+	 *assetReceipt = receipt{
+		 SellerAssetID	:	asset.ID,
+		 BuyerAssetID	:	splitAssetID,
+		 SellerName		:	ownerName,
+		 BuyerName		:	buyerName,
+		 Quantity		:	quantity,
+		 Price			:	price,
+		 Timestamp		: 	time.Unix(timestmp.Seconds, int64(timestmp.Nanos)),
 	 }
  
 	 receiptJSON, err := json.Marshal(assetReceipt)
 	 if err != nil {
-		 return fmt.Errorf("failed to marshal receipt: %s", err.Error())
+		 return nil,fmt.Errorf("failed to marshal receipt: %s", err.Error())
 	 }
  
 	 err = ctx.GetStub().PutPrivateData(collectionBuyer, receiptBuyKey, receiptJSON)
 	 if err != nil {
-		 return fmt.Errorf("failed to put private asset receipt for buyer: %s", err.Error())
+		 return nil,fmt.Errorf("failed to put private asset receipt for buyer: %s", err.Error())
 	 }
  
 	 receiptSaleKey, err := ctx.GetStub().CreateCompositeKey(typeAssetSaleReceipt, []string{ctx.GetStub().GetTxID(), asset.ID})
 	 if err != nil {
-		 return fmt.Errorf("failed to create composite key for receipt: %s", err.Error())
+		 return nil,fmt.Errorf("failed to create composite key for receipt: %s", err.Error())
 	 }
  
 	 err = ctx.GetStub().PutPrivateData(collectionSeller, receiptSaleKey, receiptJSON)
 	 if err != nil {
-		 return fmt.Errorf("failed to put private asset receipt for seller: %s", err.Error())
+		 return nil,fmt.Errorf("failed to put private asset receipt for seller: %s", err.Error())
 	 }
  
-	 return nil
+	 return assetReceipt, nil
  }
  
  // getClientOrgID gets the client org ID.
@@ -591,22 +659,41 @@ func (s *SmartContract) GetBids(ctx contractapi.TransactionContextInterface, ass
  }
  
 // ReadAsset returns the public asset data
-func (s *SmartContract) ReadAsset(ctx contractapi.TransactionContextInterface, assetID string) (*Asset, error) {
+func (s *SmartContract) ReadAsset(ctx contractapi.TransactionContextInterface, assetID string, getBatchID bool) (*Asset,*Batch, error) {
 	// Since only public data is accessed in this function, no access control is required
 	assetJSON, err := ctx.GetStub().GetState(assetID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read from world state: %v", err)
+		return nil,nil, fmt.Errorf("failed to read asset from world state: %v", err)
 	}
 	if assetJSON == nil {
-		return nil, fmt.Errorf("%s does not exist", assetID)
+		return nil,nil, fmt.Errorf("%s does not exist", assetID)
 	}
 
 	var asset *Asset
 	err = json.Unmarshal(assetJSON, &asset)
 	if err != nil {
-		return nil, err
+		return nil,nil, err
 	}
-	return asset, nil
+
+	if(getBatchID) {
+		var batchID = asset.BatchID
+
+		batchJSON, err := ctx.GetStub().GetState(batchID)
+		if err != nil {
+			return nil,nil, fmt.Errorf("failed to read batch from world state: %v", err)
+		}
+		if batchJSON == nil {
+			return nil,nil, fmt.Errorf("%s does not exist", assetID)
+		}
+
+		var batch *Batch
+		err = json.Unmarshal(batchJSON, &batch)
+		if err != nil {
+			return nil,nil, err
+		}
+		return asset,batch, nil
+	}
+	return asset, nil, nil
 }
 
 // GetAssetPrivateProperties returns the immutable asset properties from owner's private data collection
@@ -617,7 +704,7 @@ func (s *SmartContract) GetAssetPrivateProperties(ctx contractapi.TransactionCon
 		return "", err
 	}
 
-	asset, err := s.ReadAsset(ctx, assetID)
+	asset,_, err := s.ReadAsset(ctx, assetID,false)
 	 
 	 //owner name check 
 	 if requesterName != asset.Owner {
@@ -637,7 +724,7 @@ func (s *SmartContract) GetAssetPrivateProperties(ctx contractapi.TransactionCon
 
 // GetAssetSalesPrice returns the sales price
 func (s *SmartContract) GetAssetSalesPrice(ctx contractapi.TransactionContextInterface, assetID string, ownerName string) (string, error) {
-	asset, _ := s.ReadAsset(ctx, assetID)
+	asset, _ , _ := s.ReadAsset(ctx, assetID,false)
 	 
 	 //owner name check 
 	 if ownerName != asset.Owner {
@@ -676,81 +763,61 @@ func getAssetPrice(ctx contractapi.TransactionContextInterface, assetID string, 
 }
 
 // QueryAssetSaleAgreements returns all of an organization's proposed sales
-func (s *SmartContract) QueryAssetSaleAgreements(ctx contractapi.TransactionContextInterface) ([]Agreement, error) {
-	return queryAgreementsByType(ctx, typeAssetForSale)
+// changed to query agreement reciept
+func (s *SmartContract) QueryAssetSaleAgreements(ctx contractapi.TransactionContextInterface) ([]receipt, error) {
+	return queryAgreementsByType(ctx,typeAssetSaleReceipt)
 }
 
 // QueryAssetBuyAgreements returns all of an organization's proposed bids
-func (s *SmartContract) QueryAssetBuyAgreements(ctx contractapi.TransactionContextInterface) ([]Agreement, error) {
-	return queryAgreementsByType(ctx, typeAssetBid)
+func (s *SmartContract) QueryAssetBuyAgreements(ctx contractapi.TransactionContextInterface) ([]receipt, error) {
+	return queryAgreementsByType(ctx, typeAssetBuyReceipt)
 }
 
-func queryAgreementsByType(ctx contractapi.TransactionContextInterface, agreeType string) ([]Agreement, error) {
+func queryAgreementsByType(ctx contractapi.TransactionContextInterface, agreeType string) ([]receipt, error) {
 	collection, err := getClientImplicitCollectionName(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	// Query for any object type starting with `agreeType`
-	agreementsIterator, err := ctx.GetStub().GetPrivateDataByPartialCompositeKey(collection, agreeType, []string{})
+	receiptsIterator, err := ctx.GetStub().GetPrivateDataByPartialCompositeKey(collection, agreeType, []string{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to read from private data collection: %v", err)
 	}
-	defer agreementsIterator.Close()
+	defer receiptsIterator.Close()
 
-	var agreements []Agreement
-	for agreementsIterator.HasNext() {
-		resp, err := agreementsIterator.Next()
+	var receipts []receipt
+	for receiptsIterator.HasNext() {
+		resp, err := receiptsIterator.Next()
 		if err != nil {
 			return nil, err
 		}
 
-		var agreement Agreement
-		err = json.Unmarshal(resp.Value, &agreement)
+		var receipt receipt
+		err = json.Unmarshal(resp.Value, &receipt)
 		if err != nil {
 			return nil, err
 		}
 
-		agreements = append(agreements, agreement)
+		receipts = append(receipts, receipt)
 	}
 
-	return agreements, nil
+	return receipts, nil
 }
 
-// QueryAssetHistory returns the chain of custody for a asset since issuance
-func (s *SmartContract) QueryAssetHistory(ctx contractapi.TransactionContextInterface, assetID string) ([]QueryResult, error) {
-	resultsIterator, err := ctx.GetStub().GetHistoryForKey(assetID)
-	if err != nil {
-		return nil, err
+func (s *SmartContract) QueryAssetHistory(ctx contractapi.TransactionContextInterface, assetID string) ([]*Asset, error) {
+
+	var queryID string
+	var asset *Asset
+
+	var results []*Asset
+	for queryID = assetID ; queryID!="" ; queryID=asset.Parent {
+		asset,_, _ = s.ReadAsset(ctx,queryID,false)
+		
+		results = append(results, asset)
+		
 	}
-	defer resultsIterator.Close()
-
-	var results []QueryResult
-	for resultsIterator.HasNext() {
-		response, err := resultsIterator.Next()
-		if err != nil {
-			return nil, err
-		}
-
-		var asset *Asset
-		err = json.Unmarshal(response.Value, &asset)
-		if err != nil {
-			return nil, err
-		}
-
-		timestamp, err := ptypes.Timestamp(response.Timestamp)
-		if err != nil {
-			return nil, err
-		}
-		record := QueryResult{
-			TxId:      response.TxId,
-			Timestamp: timestamp,
-			Record:    asset,
-		}
-		results = append(results, record)
-	}
-
-	return results, nil
+   return results, nil
 }
 
 func main() {

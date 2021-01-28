@@ -213,7 +213,7 @@ chaincodeQuery() {
     setGlobalsForPeer0FarmersAssociation
 
     # Query Asset by Id
-    peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "ReadAsset","Args":["r1"]}'
+    peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "ReadAsset","Args":["r1",true]}'
  
 }
 
@@ -230,7 +230,7 @@ installChaincodepeer1 $1
 queryInstalledpeer0 $1
 queryInstalledpeer1 $1
 approveForMyFarmersAssociation $1
-chaincodeQuery
+# chaincodeQuery
 
 # docker exec -i cli bash < ./cli_1.sh
 # sleep 3
