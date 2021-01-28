@@ -177,7 +177,6 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  
  // ChangePublicDescription updates the asset public description. Only the current owner can update the public description
  func (s *SmartContract) ChangePublicDescription(ctx contractapi.TransactionContextInterface, assetID string, newDescription string,ownerName string) error {
- 
 	 // Get client org id
 	 // No need to check client org id matches peer org id, rely on the asset ownership check instead.
 	 clientOrgID, err := getClientOrgID(ctx, false)
@@ -185,7 +184,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return fmt.Errorf("failed to get verified OrgID: %s", err.Error())
 	 }
 	 
-	 asset,_, err := s.ReadAsset(ctx, assetID, false)
+	 asset, err := s.ReadAsset(ctx, assetID)
 	 if err != nil {
 		 return fmt.Errorf("failed to get asset: %s", err.Error())
 	 }
@@ -213,7 +212,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  // AgreeToSell adds seller's asking price to seller's implicit private data collection
  func (s *SmartContract) AgreeToSell(ctx contractapi.TransactionContextInterface, assetID string,ownerName string) error {
 	 // Query asset and verify that this clientOrgId actually owns the asset.
-	 asset,_, err := s.ReadAsset(ctx, assetID, false)
+	 asset, err := s.ReadAsset(ctx, assetID)
 	 if err != nil {
 		 return err
 	 }
@@ -295,7 +294,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return false, fmt.Errorf("asset_properties key not found in the transient map")
 	 }
  
-	 asset,_, err := s.ReadAsset(ctx, assetID, false)
+	 asset, err := s.ReadAsset(ctx, assetID)
 	 if err != nil {
 		 return false, fmt.Errorf("failed to get asset: %s", err.Error())
 	 }
@@ -332,7 +331,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to get verified OrgID: %s", err.Error())
 	 }
-	 asset,_, err := s.ReadAsset(ctx, assetID,false)
+	 asset, err := s.ReadAsset(ctx, assetID)
 	 if err != nil {
 		 return nil,err
 	 }
@@ -658,43 +657,52 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 return buildCollectionName(clientOrgID), nil
  }
  
+
 // ReadAsset returns the public asset data
-func (s *SmartContract) ReadAsset(ctx contractapi.TransactionContextInterface, assetID string, getBatchID bool) (*Asset,*Batch, error) {
+func (s *SmartContract) ReadAsset(ctx contractapi.TransactionContextInterface, assetID string) (*Asset, error) {
 	// Since only public data is accessed in this function, no access control is required
+	
+
 	assetJSON, err := ctx.GetStub().GetState(assetID)
 	if err != nil {
-		return nil,nil, fmt.Errorf("failed to read asset from world state: %v", err)
+		return nil, fmt.Errorf("failed to read asset from world state: %v", err)
 	}
 	if assetJSON == nil {
-		return nil,nil, fmt.Errorf("%s does not exist", assetID)
+		return nil, fmt.Errorf("%s does not exist", assetID)
 	}
 
 	var asset *Asset
 	err = json.Unmarshal(assetJSON, &asset)
 	if err != nil {
-		return nil,nil, err
+		return nil, err
 	}
 
-	if(getBatchID) {
-		var batchID = asset.BatchID
-
-		batchJSON, err := ctx.GetStub().GetState(batchID)
-		if err != nil {
-			return nil,nil, fmt.Errorf("failed to read batch from world state: %v", err)
-		}
-		if batchJSON == nil {
-			return nil,nil, fmt.Errorf("%s does not exist", assetID)
-		}
-
-		var batch *Batch
-		err = json.Unmarshal(batchJSON, &batch)
-		if err != nil {
-			return nil,nil, err
-		}
-		return asset,batch, nil
-	}
-	return asset, nil, nil
+	return asset, nil
 }
+
+func (s *SmartContract) ReadCompleteAsset(ctx contractapi.TransactionContextInterface, assetID string) (*Asset,*Batch) {
+	// Since only public data is accessed in this function, no access control is required
+
+	asset, err := s.ReadAsset(ctx, assetID)
+
+	var batchID = asset.BatchID
+
+	batchJSON, err := ctx.GetStub().GetState(batchID)
+	if err != nil {
+		return nil, nil
+	}
+	if batchJSON == nil {
+		return nil, nil
+	}
+
+	var batch *Batch
+	err = json.Unmarshal(batchJSON, &batch)
+	if err != nil {
+		return nil,nil
+	}
+	return asset,batch
+}
+
 
 // GetAssetPrivateProperties returns the immutable asset properties from owner's private data collection
 func (s *SmartContract) GetAssetPrivateProperties(ctx contractapi.TransactionContextInterface, assetID string, requesterName string) (string, error) {
@@ -704,7 +712,7 @@ func (s *SmartContract) GetAssetPrivateProperties(ctx contractapi.TransactionCon
 		return "", err
 	}
 
-	asset,_, err := s.ReadAsset(ctx, assetID,false)
+	asset, err := s.ReadAsset(ctx, assetID)
 	 
 	 //owner name check 
 	 if requesterName != asset.Owner {
@@ -724,7 +732,7 @@ func (s *SmartContract) GetAssetPrivateProperties(ctx contractapi.TransactionCon
 
 // GetAssetSalesPrice returns the sales price
 func (s *SmartContract) GetAssetSalesPrice(ctx contractapi.TransactionContextInterface, assetID string, ownerName string) (string, error) {
-	asset, _ , _ := s.ReadAsset(ctx, assetID,false)
+	asset, _ := s.ReadAsset(ctx, assetID)
 	 
 	 //owner name check 
 	 if ownerName != asset.Owner {
@@ -812,7 +820,7 @@ func (s *SmartContract) QueryAssetHistory(ctx contractapi.TransactionContextInte
 
 	var results []*Asset
 	for queryID = assetID ; queryID!="" ; queryID=asset.Parent {
-		asset,_, _ = s.ReadAsset(ctx,queryID,false)
+		asset, _ = s.ReadAsset(ctx,queryID)
 		
 		results = append(results, asset)
 		

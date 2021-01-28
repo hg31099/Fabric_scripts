@@ -29,13 +29,13 @@ peer chaincode invoke -o orderer.example.com:7050 \
 --cafile /etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
 -C $CHANNEL_NAME -n ${CC_NAME} \
 --peerAddresses peer0.farmersAssociation.example.com:7051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/farmersAssociation.example.com/peers/peer0.farmersAssociation.example.com/tls/ca.crt \
--c '{"function": "CreateAsset","Args":["r1", "Rice", "Basmati", "hyderabadi", "grain", "true", "open to sell","FarmerCli1"]}' --transient "{\"asset_properties\":\"$ASSET_PROPERTIES\"}"
+-c '{"function": "CreateAsset","Args":["r1", "Rice", "Basmati", "hyderabadi", "grain", "true", "open to sell","FarmerCli1","1"]}' --transient "{\"asset_properties\":\"$ASSET_PROPERTIES\"}"
 # --peerAddresses peer0.retailersAssociation.example.com:11051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/retailersAssociation.example.com/peers/peer0.retailersAssociation.example.com/tls/ca.crt \
 # --peerAddresses peer0.wholesalersAssociation.example.com:9051 --tlsRootCertFiles /etc/hyperledger/channel/crypto-config/peerOrganizations/wholesalersAssociation.example.com/peers/peer0.wholesalersAssociation.example.com/tls/ca.crt \
 
 
 
 
-sleep 3
+# sleep 3
 
-peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "ReadAsset","Args":["r1",true]}'
+# peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "ReadCompleteAsset","Args":["r1"]}'
