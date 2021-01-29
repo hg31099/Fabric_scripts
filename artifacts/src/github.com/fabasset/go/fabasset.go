@@ -482,7 +482,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  func transferAssetState(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, price int, ownerName string,buyerName string, quantity int,splitAssetID string) (*receipt , error) {
  
 	 // save the asset with the new owner
-
+	 var assetId = asset.ID
 	 var splitAsset *Asset
 
 	 splitAsset = asset
@@ -525,12 +525,12 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return nil,fmt.Errorf("failed to put Asset private properties for buyer: %s", err.Error())
 	 }
 	 collectionSeller := buildCollectionName(clientOrgID)
-	 err = ctx.GetStub().PutPrivateData(collectionSeller, asset.ID, updatedprivateassetJSON)
+	 err = ctx.GetStub().PutPrivateData(collectionSeller, assetId , updatedprivateassetJSON)
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to update Asset private properties for seller: %s", err.Error())
 	 }
 	 // Delete the price records for seller
-	 assetPriceKey, err := ctx.GetStub().CreateCompositeKey(typeAssetForSale, []string{asset.ID, ownerName} )
+	 assetPriceKey, err := ctx.GetStub().CreateCompositeKey(typeAssetForSale, []string{assetId, ownerName} )
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to create composite key for seller: %s", err.Error())
 	 }
@@ -541,7 +541,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 }
  
 	 // Delete the price records for buyer
-	 assetPriceKey, err = ctx.GetStub().CreateCompositeKey(typeAssetBid, []string{asset.ID, buyerName})
+	 assetPriceKey, err = ctx.GetStub().CreateCompositeKey(typeAssetBid, []string{assetId, buyerName})
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to create composite key for buyer: %s", err.Error())
 	 }
@@ -564,7 +564,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 }
 	
 	 assetReceipt := receipt{
-		 SellerAssetID	:	asset.ID,
+		 SellerAssetID	:	assetId,
 		 BuyerAssetID	:	splitAssetID,
 		 SellerName		:	ownerName,
 		 BuyerName		:	buyerName,
@@ -583,7 +583,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return nil,fmt.Errorf("failed to put private asset receipt for buyer: %s", err.Error())
 	 }
  
-	 receiptSaleKey, err := ctx.GetStub().CreateCompositeKey(typeAssetSaleReceipt, []string{ctx.GetStub().GetTxID(), asset.ID})
+	 receiptSaleKey, err := ctx.GetStub().CreateCompositeKey(typeAssetSaleReceipt, []string{ctx.GetStub().GetTxID(), assetId})
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to create composite key for receipt: %s", err.Error())
 	 }
