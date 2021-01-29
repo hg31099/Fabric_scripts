@@ -379,7 +379,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed transfer verification: %s", err.Error())
 	 }
-
+	 fmt.Println("in transfer 1")
 	 var invoice *receipt 
 	 invoice , err = transferAssetState(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, agreement.Price, ownerName, buyerName, buyQuantity,splitAssetID)
 	 if err != nil {
@@ -563,8 +563,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return nil,fmt.Errorf("failed to create timestamp for receipt: %s", err.Error())
 	 }
 	
-	 var assetReceipt *receipt 
-	 *assetReceipt = receipt{
+	 assetReceipt := receipt{
 		 SellerAssetID	:	asset.ID,
 		 BuyerAssetID	:	splitAssetID,
 		 SellerName		:	ownerName,
@@ -573,7 +572,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 Price			:	price,
 		 Timestamp		: 	time.Unix(timestmp.Seconds, int64(timestmp.Nanos)),
 	 }
- 
+	 ret := &assetReceipt
 	 receiptJSON, err := json.Marshal(assetReceipt)
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to marshal receipt: %s", err.Error())
@@ -594,7 +593,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return nil,fmt.Errorf("failed to put private asset receipt for seller: %s", err.Error())
 	 }
  
-	 return assetReceipt, nil
+	 return ret, nil
  }
  
  // getClientOrgID gets the client org ID.
