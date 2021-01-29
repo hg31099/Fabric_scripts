@@ -687,31 +687,35 @@ func (s *SmartContract) ReadAsset(ctx contractapi.TransactionContextInterface, a
 
 func (s *SmartContract) ReadCompleteAsset(ctx contractapi.TransactionContextInterface, assetID string) (*CompleteAsset,error) {
 	// Since only public data is accessed in this function, no access control is required
-
+	fmt.Println("pos 1") 
 	var asset *Asset
 	asset, err := s.ReadAsset(ctx, assetID)
 
 	var batchID = asset.BatchID
-
+	fmt.Println("pos 2") 
 	batchJSON, err := ctx.GetStub().GetState(batchID)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 	if batchJSON == nil {
 		return nil, nil
 	}
+	fmt.Println("pos 3") 
 
 	var batch *Batch
 	err = json.Unmarshal(batchJSON, &batch)
 	if err != nil {
-		return nil,nil
+		return nil,err
 	}
-	var completeAsset *CompleteAsset
-	 *completeAsset= CompleteAsset{
+	fmt.Println("pos 4") 
+	completeAsset := CompleteAsset{
 		Assetq : *asset,
 		Batchq : *batch,
 	}
-	return completeAsset,nil
+	fmt.Println("pos 5") 
+	ret := &completeAsset
+	fmt.Println("pos 6") 
+	return ret,nil
 }
 
 
