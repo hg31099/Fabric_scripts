@@ -11,6 +11,7 @@
 	 "github.com/hyperledger/fabric-chaincode-go/pkg/statebased"
 	 "github.com/hyperledger/fabric-chaincode-go/shim"
 	 "github.com/hyperledger/fabric-contract-api-go/contractapi"
+	 "github.com/jinzhu/copier"
 
  )
   
@@ -484,8 +485,8 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 // save the asset with the new owner
 	 var assetId = asset.ID
 	 var splitAsset *Asset
-
-	 splitAsset = asset
+	 copier.Copy(asset,splitAsset)
+	//  splitAsset = asset
 	 splitAsset.ID = splitAssetID	
 	 splitAsset.OwnerOrg = buyerOrgID
 	 splitAsset.Owner = buyerName
