@@ -482,17 +482,20 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  // transferAssetState makes the public and private state updates for the transferred asset
  func transferAssetState(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, price int, ownerName string,buyerName string, quantity int,splitAssetID string) (*receipt , error) {
  
+	fmt.Println("in transfer 2")
 	 // save the asset with the new owner
 	 var assetId = asset.ID
-	 var splitAsset *Asset
-	 copier.Copy(asset,splitAsset)
+	//  var splitAsset *Asset
+	 splitAsset := asset
 	//  splitAsset = asset
 	 splitAsset.ID = splitAssetID	
 	 splitAsset.OwnerOrg = buyerOrgID
 	 splitAsset.Owner = buyerName
 	 splitAsset.Parent=assetId
+
+
 	 splitAssetJSON, _ := json.Marshal(splitAsset)
- 
+		fmt.Println("in transfer 3")
 	 err := ctx.GetStub().PutState(splitAsset.ID, splitAssetJSON)
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to write asset for buyer: %s", err.Error())
@@ -503,7 +506,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed setting state based endorsement for new owner: %s", err.Error())
 	 }
-	 
+	 fmt.Println("in transfer 4")
 	 var newprivateasset privateAsset
 	 var updatedprivateasset privateAsset
 
@@ -511,7 +514,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to unmarshal private asset JSON: %s", err.Error())
 	 }
-
+	 fmt.Println("in transfer 5")
 	 updatedprivateasset = newprivateasset
 	 updatedprivateasset.Quantity = updatedprivateasset.Quantity - quantity
 
@@ -520,7 +523,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 
 	 newprivateassetJSON, _ := json.Marshal(newprivateasset)
 	 updatedprivateassetJSON, _ := json.Marshal(updatedprivateasset)
-
+	 fmt.Println("in transfer 6")
 	 collectionBuyer := buildCollectionName(buyerOrgID)
 	 err = ctx.GetStub().PutPrivateData(collectionBuyer, splitAsset.ID, newprivateassetJSON)
 	 if err != nil {
@@ -541,7 +544,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to delete asset price from implicit private data collection for seller: %s", err.Error())
 	 }
- 
+	 fmt.Println("in transfer 7")
 	 // Delete the price records for buyer
 	 assetPriceKey, err = ctx.GetStub().CreateCompositeKey(typeAssetBid, []string{assetId, buyerName})
 	 if err != nil {
@@ -552,7 +555,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to delete asset price from implicit private data collection for buyer: %s", err.Error())
 	 }
- 
+	 fmt.Println("in transfer 8")
 	 // Keep record for a 'receipt' in both buyer and seller private data collection to record the sales price and date
 	 // Persist the agreed to price in a collection sub-namespace based on receipt key prefix
 	 receiptBuyKey, err := ctx.GetStub().CreateCompositeKey(typeAssetBuyReceipt, []string{asset.ID, ctx.GetStub().GetTxID()})
@@ -564,7 +567,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to create timestamp for receipt: %s", err.Error())
 	 }
-	
+	 fmt.Println("in transfer 9")
 	 assetReceipt := receipt{
 		 SellerAssetID	:	assetId,
 		 BuyerAssetID	:	splitAssetID,
@@ -579,7 +582,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to marshal receipt: %s", err.Error())
 	 }
- 
+	 fmt.Println("in transfer 10")
 	 err = ctx.GetStub().PutPrivateData(collectionBuyer, receiptBuyKey, receiptJSON)
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to put private asset receipt for buyer: %s", err.Error())
@@ -589,12 +592,12 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to create composite key for receipt: %s", err.Error())
 	 }
- 
+	 fmt.Println("in transfer 11")
 	 err = ctx.GetStub().PutPrivateData(collectionSeller, receiptSaleKey, receiptJSON)
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to put private asset receipt for seller: %s", err.Error())
 	 }
- 
+	 fmt.Println("in transfer 12")
 	 return ret, nil
  }
  
