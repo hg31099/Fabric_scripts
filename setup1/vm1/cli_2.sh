@@ -9,7 +9,7 @@ export VERSION="1"
 # export CC_END_POLICY="OR('FarmersAssociationMSP.peer','WholesalersAssociationMSP.peer', 'RetailersAssociationMSP.peer')"
 # export CC_END_POLICY="AND('FarmersAssociationMSP.peer')"
 export CC_END_POLICY="OR('FarmersAssociationMSP.peer','WholesalersAssociationMSP.peer','RetailersAssociationMSP.peer')"
-export ASSET_PROPERTIES=$(echo -n "{\"object_type\":\"asset_properties\",\"assetID\":\"r1\",\"quantity\":\"100\",\"unit\":\"kg\",\"quality\":\"5\",\"tradeID\":\"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3\"}" | base64 | tr -d \\n)
+export ASSET_PROPERTIES=$(echo -n "{\"object_type\":\"asset_properties\",\"assetID\":\"r1\",\"quantity\":100,\"unit\":\"kg\",\"quality\":\"5\",\"salt\":\"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3\"}" | base64 | tr -d \\n)
 
 
 peer chaincode invoke -o orderer.example.com:7050 \
@@ -36,6 +36,6 @@ peer chaincode invoke -o orderer.example.com:7050 \
 
 
 
-# sleep 3
+sleep 3s
 
 peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "ReadCompleteAsset","Args":["r1"]}'
