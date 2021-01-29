@@ -365,9 +365,17 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to unmarshal price JSON: %s", err.Error())
 	 }
+	 if(agreement.Quantity!=buyQuantity){
+		return nil,fmt.Errorf("Quantity in agreement does not match with selling quantity")
+	 }
+	 var currentPrivate privateAsset
+
+	 err = json.Unmarshal([]byte(immutablePropertiesJSON), &currentPrivate)
+	 if err != nil {
+		 return nil,fmt.Errorf("failed to unmarshal private asset JSON: %s", err.Error())
+	 }
  
- 
-	 err = verifyTransferConditions(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, priceJSON,ownerName, buyerName,agreement.Quantity,buyQuantity)
+	 err = verifyTransferConditions(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, priceJSON,ownerName, buyerName,currentPrivate.Quantity,buyQuantity)
 	 if err != nil {
 		 return nil,fmt.Errorf("failed transfer verification: %s", err.Error())
 	 }

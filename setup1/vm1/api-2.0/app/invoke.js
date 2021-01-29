@@ -9,7 +9,7 @@ const util = require('util')
 
 const helper = require('./helper')
 var uniqueID = (function() {
-  var id = 1; // This is the private persistent value
+  var id = 2; // This is the private persistent value
   // The outer function returns a nested function that has access
   // to the persistent value.  It is this nested function we're storing
   // in the variable uniqueID above.
