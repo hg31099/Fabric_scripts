@@ -699,13 +699,13 @@ func (s *SmartContract) ReadCompleteAsset(ctx contractapi.TransactionContextInte
 	var asset *Asset
 	asset, err := s.ReadAsset(ctx, assetID)
 	if err != nil {
-		return fmt.Errorf("failed to get asset: %s", err.Error())
+		return nil,fmt.Errorf("failed to get asset: %s", err.Error())
 	}
-	var batchID := asset.BatchID
+	var batchID = asset.BatchID
 	fmt.Println("pos 2") 
 	batchJSON, err := ctx.GetStub().GetState(batchID)
 	if err != nil {
-		return fmt.Errorf("failed to get batch: %s", err.Error())
+		return nil,fmt.Errorf("failed to get batch: %s", err.Error())
 	}
 	if batchJSON == nil {
 		return nil, nil
