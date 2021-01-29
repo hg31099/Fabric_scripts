@@ -489,6 +489,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 splitAsset.ID = splitAssetID	
 	 splitAsset.OwnerOrg = buyerOrgID
 	 splitAsset.Owner = buyerName
+	 splitAsset.Parent=assetId
 	 splitAssetJSON, _ := json.Marshal(splitAsset)
  
 	 err := ctx.GetStub().PutState(splitAsset.ID, splitAssetJSON)
