@@ -103,15 +103,15 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if !ok {
 		 return fmt.Errorf("asset_properties key not found in the transient map")
 	 }
-	 var currentPrivate privateAsset
+	//  var currentPrivate privateAsset
 
-	 err = json.Unmarshal([]byte(immutablePropertiesJSON), &currentPrivate)
-	 if err != nil {
-		 return fmt.Errorf("failed to unmarshal private asset JSON: %s", err.Error())
-	 }
+	//  err = json.Unmarshal([]byte(immutablePropertiesJSON), &currentPrivate)
+	//  if err != nil {
+	// 	 return fmt.Errorf("failed to unmarshal private asset JSON: %s", err.Error())
+	//  }
 	 
-	 currentPrivate.ID=a0
-	 immutablePropertiesJSON, _ =json.Marshal(currentPrivate)
+	//  currentPrivate.ID=a0
+	//  immutablePropertiesJSON, _ =json.Marshal(currentPrivate)
 	 // Get client org id and verify it matches peer org id.
 	 // In this scenario, client is only authorized to read/write private data from its own peer.
 	 clientOrgID, err := getClientOrgID(ctx, true)
@@ -400,7 +400,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  }
  
  // verifyTransferConditions checks that client org currently owns asset and that both parties have agreed on price
- func verifyTransferConditions(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, priceJSON []byte, ownerName string, buyerName string,sellerQuantity int,buyerQuanity int) error {
+ func verifyTransferConditions(ctx contracbatch_id_apptapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, priceJSON []byte, ownerName string, buyerName string,sellerQuantity int,buyerQuanity int) error {
  
 	//CHECK 0: owner name check, seller owns the asset 
 	if ownerName != asset.Owner {

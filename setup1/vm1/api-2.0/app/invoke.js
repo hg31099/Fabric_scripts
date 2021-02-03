@@ -97,6 +97,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             qrcode.toString(asset_id_app, function (err, canvas) {
               console.log(canvas)
              })
+             var batch_id_app=create_Batch_ID();
             console.log(`Transient data is : ${transientData}`)
             let tstring=JSON.stringify(transientData)
             let assetData = JSON.parse(tstring)
@@ -120,7 +121,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
-                        .submit(asset_id_app, args[1], args[2], args[3], args[4], args[5], args[6], username,create_Batch_ID())
+                        .submit(asset_id_app, args[1], args[2], args[3], args[4], args[5], args[6], username,batch_id_app)
             // counter=counter+1
 
           

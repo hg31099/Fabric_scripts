@@ -36,6 +36,6 @@ peer chaincode invoke -o orderer.example.com:7050 \
 
 
 
-sleep 3s
+sleep 3
 
 peer chaincode query -C $CHANNEL_NAME -n ${CC_NAME} -c '{"function": "ReadCompleteAsset","Args":["r1"]}'
