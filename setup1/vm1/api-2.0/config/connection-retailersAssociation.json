@@ -25,7 +25,7 @@
     },
     "peers": {
         "peer0.retailersAssociation.example.com": {
-            "url": "grpcs://20.83.163.11:11051",
+            "url": "grpcs://52.170.238.112:11051",
             "tlsCACerts": {
                 "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUEWhWTNWB0B1YTxCZ0XAgWdMHY/0wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNjA2MDYwMFoXDTM1MTIyMzA2MDYwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELBBQuNl+rLCDYd2N1OdkrjoU\ncpaZMyoWD5ydI79ZGiW2hkadJF61YrOTAFnrMn3XXmvA/HocUKH99lcr13skbaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMdNdca1HlzIqTdjDMYdEiTta+MvMAoGCCqGSM49BAMCA0gAMEUCIQDKZL/Fa+sQ\nVxkG/E20dJwSRllnC2wktSOGYr8vDV9hsAIgPyc2bacCYB4Tcu/W483A4QTpCdmx\nwFV7hBOe1Khqncs=\n-----END CERTIFICATE-----\n"
             },
@@ -35,7 +35,7 @@
             }
         },
 	"peer1.retailersAssociation.example.com": {
-            "url": "grpcs://20.83.163.11:12051",
+            "url": "grpcs://52.170.238.112:12051",
             "tlsCACerts": {
                 "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUEWhWTNWB0B1YTxCZ0XAgWdMHY/0wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNjA2MDYwMFoXDTM1MTIyMzA2MDYwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELBBQuNl+rLCDYd2N1OdkrjoU\ncpaZMyoWD5ydI79ZGiW2hkadJF61YrOTAFnrMn3XXmvA/HocUKH99lcr13skbaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMdNdca1HlzIqTdjDMYdEiTta+MvMAoGCCqGSM49BAMCA0gAMEUCIQDKZL/Fa+sQ\nVxkG/E20dJwSRllnC2wktSOGYr8vDV9hsAIgPyc2bacCYB4Tcu/W483A4QTpCdmx\nwFV7hBOe1Khqncs=\n-----END CERTIFICATE-----\n"
             },
@@ -49,7 +49,7 @@
     },
     "certificateAuthorities": {
         "ca.retailersAssociation.example.com": {
-            "url": "https://20.83.163.11:10054",
+            "url": "https://52.170.238.112:10054",
             "caName": "ca.retailersAssociation.example.com",
             "tlsCACerts": {
                 "pem": "-----BEGIN CERTIFICATE-----\nMIICFzCCAb2gAwIBAgIUEWhWTNWB0B1YTxCZ0XAgWdMHY/0wCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTIwMTIyNjA2MDYwMFoXDTM1MTIyMzA2MDYwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELBBQuNl+rLCDYd2N1OdkrjoU\ncpaZMyoWD5ydI79ZGiW2hkadJF61YrOTAFnrMn3XXmvA/HocUKH99lcr13skbaNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFMdNdca1HlzIqTdjDMYdEiTta+MvMAoGCCqGSM49BAMCA0gAMEUCIQDKZL/Fa+sQ\nVxkG/E20dJwSRllnC2wktSOGYr8vDV9hsAIgPyc2bacCYB4Tcu/W483A4QTpCdmx\nwFV7hBOe1Khqncs=\n-----END CERTIFICATE-----\n"

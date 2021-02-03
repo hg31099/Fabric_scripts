@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken');
 const bearerToken = require('express-bearer-token');
 const cors = require('cors');
 const constants = require('./config/constants.json')
-
+const qrcode = require('qrcode')
 const host = process.env.HOST || constants.host;
 const port = process.env.PORT || constants.port;
 
@@ -207,7 +207,7 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName', async function (req
         logger.debug('fcn  : ' + fcn);
         logger.debug('args  : ' + args);
         logger.debug('args  : ' + orgName);
-        logger.debug('orgname 2 : ' + req.orgname);
+        logger.debug('orgname 2 : ' + req.orgname);http://104.41.128.25:4000/channels/trustflow/chaincodes/fabasset?args=["ww1"]&peer=peer0.farmersAssociation.example.com&fcn=QueryAssetHistory
         if (!chaincodeName) {
             res.json(getErrorMessage('\'chaincodeName\''));
             return;

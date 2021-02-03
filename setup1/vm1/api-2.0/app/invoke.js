@@ -4,7 +4,7 @@ const path = require("path")
 const log4js = require('log4js');
 const logger = log4js.getLogger('BasicNetwork');
 const util = require('util')
-
+const qrcode = require('qrcode')
 // const createTransactionEventHandler = require('./MyTransactionEventHandler.ts')
 
 const helper = require('./helper')
@@ -16,6 +16,27 @@ var uniqueID = (function() {
   return function() { return id++; };  // Return and increment
 })(); // Invoke the outer function after defining it.
 var counter
+
+function create_ID(){
+  var dt = new Date().getTime();
+  var uuid = '3xx-xxx-xxx-yxx'.replace(/[xy]/g, function(c) {
+      var r = (dt + Math.random()*16)%16 | 0;
+      dt = Math.floor(dt/16);
+      return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+  });
+  return uuid;
+}
+
+function create_Batch_ID(){
+  var dt = new Date().getTime();
+  var uuid = '1xxx-xyxx'.replace(/[xy]/g, function(c) {
+      var r = (dt + Math.random()*16)%16 | 0;
+      dt = Math.floor(dt/16);
+      return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+  });
+  return uuid;
+}
+
 const invokeTransaction = async (channelName, chaincodeName, fcn, args, username, org_name, transientData, peers) => {
     try {               
         logger.debug(util.format('\n============ invoke transaction on channel %s ============\n', channelName));
@@ -69,8 +90,13 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
     
         let result
         let message;
+        let canvas;
         if (fcn == "CreateAsset") {
           
+            var asset_id_app=create_ID();
+            qrcode.toString(asset_id_app, function (err, canvas) {
+              console.log(canvas)
+             })
             console.log(`Transient data is : ${transientData}`)
             let tstring=JSON.stringify(transientData)
             let assetData = JSON.parse(tstring)
@@ -94,13 +120,17 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
-                        .submit(args[0], args[1], args[2], args[3], args[4], args[5], args[6], username,counter.toString())
+                        .submit(asset_id_app, args[1], args[2], args[3], args[4], args[5], args[6], username,create_Batch_ID())
             // counter=counter+1
 
           
-            message = `Successfully added the asset asset with key ${args[0]}`
+            message = `Successfully added the asset asset with key ${asset_id_app}. Please save this ID for future references.`
 
         } else if ( fcn == "TransferAsset") {
+          var split_asset_id_app=create_ID();
+          qrcode.toString(split_asset_id_app, function (err, canvas) {
+            console.log(canvas)
+           })
             console.log(`Transient data is : ${transientData}`)
             let tstring=JSON.stringify(transientData)
             let assetData = JSON.parse(tstring)
@@ -134,8 +164,11 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
-                        .submit(args[0], args[1],args[2],username,args[3],args[4])
-            message = `Successfully executed the function`
+                        .submit(args[0], args[1],args[2],username,split_asset_id_app,args[3])
+            qrcode.toString('split_asset_id_app', function (err, canvas) {
+              console.log(canvas)
+              })
+            message = `Successfully executed the function and created asset with id ${split_asset_id_app}.`
         } else if (fcn == "AgreeToSell" || fcn == "AgreeToBuy") {
             console.log(`Transient data is : ${transientData}`)
             let tstring=JSON.stringify(transientData)
@@ -200,7 +233,8 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
 
         let response = {
             message: message,
-            result: result
+            result: result,
+            canvas: canvas
          
         }
         return response;

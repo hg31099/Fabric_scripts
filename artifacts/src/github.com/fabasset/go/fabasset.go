@@ -103,7 +103,15 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if !ok {
 		 return fmt.Errorf("asset_properties key not found in the transient map")
 	 }
- 
+	 var currentPrivate privateAsset
+
+	 err = json.Unmarshal([]byte(immutablePropertiesJSON), &currentPrivate)
+	 if err != nil {
+		 return fmt.Errorf("failed to unmarshal private asset JSON: %s", err.Error())
+	 }
+	 
+	 currentPrivate.ID=a0
+	 immutablePropertiesJSON, _ =json.Marshal(currentPrivate)
 	 // Get client org id and verify it matches peer org id.
 	 // In this scenario, client is only authorized to read/write private data from its own peer.
 	 clientOrgID, err := getClientOrgID(ctx, true)

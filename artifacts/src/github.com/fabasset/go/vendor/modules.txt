@@ -43,8 +43,6 @@ github.com/hyperledger/fabric-protos-go/ledger/queryresult
 github.com/hyperledger/fabric-protos-go/ledger/rwset
 github.com/hyperledger/fabric-protos-go/msp
 github.com/hyperledger/fabric-protos-go/peer
-# github.com/jinzhu/copier v0.2.3
-github.com/jinzhu/copier
 # github.com/joho/godotenv v1.3.0
 github.com/joho/godotenv
 # github.com/mailru/easyjson v0.0.0-20190626092158-b2ccc519800e
