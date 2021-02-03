@@ -400,7 +400,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  }
  
  // verifyTransferConditions checks that client org currently owns asset and that both parties have agreed on price
- func verifyTransferConditions(ctx contracbatch_id_apptapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, priceJSON []byte, ownerName string, buyerName string,sellerQuantity int,buyerQuanity int) error {
+ func verifyTransferConditions(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, priceJSON []byte, ownerName string, buyerName string,sellerQuantity int,buyerQuanity int) error {
  
 	//CHECK 0: owner name check, seller owns the asset 
 	if ownerName != asset.Owner {
