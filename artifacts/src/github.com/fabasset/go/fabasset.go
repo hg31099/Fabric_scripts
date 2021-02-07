@@ -64,10 +64,10 @@ type Batch struct{
 
 type privateAsset struct {
 	ObjectType			string `json:"object_type"`
-	Quantity   			int `json:"quantity"`
-	Unit  				string `json:"unit"`
 	Quality      		string `json:"quality"`
+	Quantity   			int `json:"quantity"`
 	Salt 		   		string `json:"salt"`
+	Unit  				string `json:"unit"`
 }
 
  type receipt struct {
@@ -740,7 +740,7 @@ func (s *SmartContract) ReadCompleteAsset(ctx contractapi.TransactionContextInte
 	fmt.Println("pos 5") 
 	ret := &completeAsset
 	fmt.Println("pos 6") 
-	
+
 	return ret,nil
 }
 
