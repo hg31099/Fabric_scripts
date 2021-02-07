@@ -8,18 +8,10 @@ const qrcode = require('qrcode')
 // const createTransactionEventHandler = require('./MyTransactionEventHandler.ts')
 
 const helper = require('./helper')
-var uniqueID = (function() {
-  var id = 2; // This is the private persistent value
-  // The outer function returns a nested function that has access
-  // to the persistent value.  It is this nested function we're storing
-  // in the variable uniqueID above.
-  return function() { return id++; };  // Return and increment
-})(); // Invoke the outer function after defining it.
-var counter
 
 function create_ID(){
   var dt = new Date().getTime();
-  var uuid = '3xx-xxx-xxx-yxx'.replace(/[xy]/g, function(c) {
+  var uuid = 'xxx-xxx-xxx-yxx'.replace(/[xy]/g, function(c) {
       var r = (dt + Math.random()*16)%16 | 0;
       dt = Math.floor(dt/16);
       return (c=='x' ? r :(r&0x3|0x8)).toString(16);
@@ -29,7 +21,7 @@ function create_ID(){
 
 function create_Batch_ID(){
   var dt = new Date().getTime();
-  var uuid = '1xxx-xyxx'.replace(/[xy]/g, function(c) {
+  var uuid = 'xxxx-xyxx'.replace(/[xy]/g, function(c) {
       var r = (dt + Math.random()*16)%16 | 0;
       dt = Math.floor(dt/16);
       return (c=='x' ? r :(r&0x3|0x8)).toString(16);
@@ -97,7 +89,9 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             qrcode.toString(asset_id_app, function (err, canvas) {
               console.log(canvas)
              })
-             var batch_id_app=create_Batch_ID();
+
+            var batch_id_app=create_Batch_ID();
+
             console.log(`Transient data is : ${transientData}`)
             let tstring=JSON.stringify(transientData)
             let assetData = JSON.parse(tstring)
@@ -106,7 +100,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             let key = Object.keys(assetData)[0]
             const transientDataBuffer = {}
             // transientDataBuffer[key] = Buffer.from(JSON.stringify(assetData.asset_properties))
-            counter=uniqueID()
+    
             console.log(JSON.stringify(assetData.asset_properties) )
             const orderedTransient = Object.keys(assetData.asset_properties).sort().reduce(
                 (obj, key) => { 
@@ -121,17 +115,18 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
-                        .submit(asset_id_app, args[1], args[2], args[3], args[4], args[5], args[6], username,batch_id_app)
-            // counter=counter+1
+                        .submit(asset_id_app, args[0], args[1], args[2], args[3], args[4], args[5], username, batch_id_app)
 
           
-            message = `Successfully added the asset asset with key ${asset_id_app}. Please save this ID for future references.`
+            message = `Successfully added the asset asset with key ${asset_id_app} and batch with ${batch_id_app}. Please save this ID for future references.`
 
         } else if ( fcn == "TransferAsset") {
           var split_asset_id_app=create_ID();
+
           qrcode.toString(split_asset_id_app, function (err, canvas) {
             console.log(canvas)
            })
+
             console.log(`Transient data is : ${transientData}`)
             let tstring=JSON.stringify(transientData)
             let assetData = JSON.parse(tstring)
@@ -141,6 +136,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             let key2 = Object.keys(assetData)[1]
             const transientDataBuffer = {}
             console.log(JSON.stringify(assetData.asset_properties) )
+
             const orderedTransient1 = Object.keys(assetData.asset_properties).sort().reduce(
                 (obj, key) => { 
                   obj[key] = assetData.asset_properties[key]; 
@@ -158,6 +154,7 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
                 }, 
                 {}
               );
+
               console.log(JSON.stringify(orderedTransient2));
               transientDataBuffer[key2] = Buffer.from(JSON.stringify(orderedTransient2))
             // transientDataBuffer[key1] = Buffer.from(JSON.stringify(assetData.asset_properties))
@@ -165,10 +162,11 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, username
             result = await contract.createTransaction(fcn)
                         .setTransient(transientDataBuffer)
                         .setEndorsingPeers(peers)
-                        .submit(args[0], args[1],args[2],username,split_asset_id_app,args[3])
+                        .submit(args[0], args[1], args[2], args[3], username, split_asset_id_app)
             qrcode.toString('split_asset_id_app', function (err, canvas) {
               console.log(canvas)
               })
+              
             message = `Successfully executed the function and created asset with id ${split_asset_id_app}.`
         } else if (fcn == "AgreeToSell" || fcn == "AgreeToBuy") {
             console.log(`Transient data is : ${transientData}`)

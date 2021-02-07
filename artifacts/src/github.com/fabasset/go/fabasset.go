@@ -64,7 +64,6 @@ type Batch struct{
 
 type privateAsset struct {
 	ObjectType			string `json:"object_type"`
-	ID   				string `json:"assetID"`
 	Quantity   			int `json:"quantity"`
 	Unit  				string `json:"unit"`
 	Quality      		string `json:"quality"`
@@ -337,7 +336,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  
  // TransferAsset checks transfer conditions and then transfers asset state to buyer.
  // TransferAsset can only be called by current owner
- func (s *SmartContract) TransferAsset(ctx contractapi.TransactionContextInterface, assetID string, buyerOrgID string, buyerName string, ownerName string,splitAssetID string,buyQuantity int) (*receipt, error) {
+ func (s *SmartContract) TransferAsset(ctx contractapi.TransactionContextInterface, assetID string, buyerOrgID string, buyerName string, buyQuantity int, ownerName string,splitAssetID string) (*receipt, error) {
  
 	 // Get client org id and verify it matches peer org id.
 	 // For a transfer, selling client must get endorsement from their own peer and from buyer peer, therefore don't verify client org id matches peer org id
@@ -374,7 +373,8 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to unmarshal price JSON: %s", err.Error())
 	 }
-	 if(agreement.Quantity!=buyQuantity){
+
+	 if(agreement.Quantity != buyQuantity){
 		return nil,fmt.Errorf("Quantity in agreement does not match with selling quantity")
 	 }
 	 var currentPrivate privateAsset
@@ -384,13 +384,14 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 return nil,fmt.Errorf("failed to unmarshal private asset JSON: %s", err.Error())
 	 }
  
-	 err = verifyTransferConditions(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, priceJSON,ownerName, buyerName,currentPrivate.Quantity,buyQuantity)
+	 err = verifyTransferConditions(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, priceJSON,ownerName, buyerName, currentPrivate.Quantity, buyQuantity)
 	 if err != nil {
 		 return nil,fmt.Errorf("failed transfer verification: %s", err.Error())
 	 }
+
 	 fmt.Println("in transfer 1")
 	 var invoice *receipt 
-	 invoice , err = transferAssetState(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, agreement.Price, ownerName, buyerName, buyQuantity,splitAssetID)
+	 invoice , err = transferAssetState(ctx, asset, immutablePropertiesJSON, clientOrgID, buyerOrgID, agreement.Price, ownerName, buyerName, buyQuantity, splitAssetID)
 	 if err != nil {
 		 return nil,fmt.Errorf("failed asset transfer: %s", err.Error())
 	 }
@@ -479,7 +480,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 }
 
 	 //CHECK4: verify whether buying quanity is available or not with seller
-	 if(sellerQuantity<buyerQuanity){
+	 if(sellerQuantity < buyerQuanity){
 		return fmt.Errorf("Not Enough quantity available for sell")
 	 }
  
@@ -488,14 +489,13 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
  }
 
  // transferAssetState makes the public and private state updates for the transferred asset
- func transferAssetState(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, price int, ownerName string,buyerName string, quantity int,splitAssetID string) (*receipt , error) {
+ func transferAssetState(ctx contractapi.TransactionContextInterface, asset *Asset, immutablePropertiesJSON []byte, clientOrgID string, buyerOrgID string, price int, ownerName string, buyerName string, quantity int, splitAssetID string) (*receipt , error) {
  
 	fmt.Println("in transfer 2")
 	 // save the asset with the new owner
 	 var assetId = asset.ID
 	//  var splitAsset *Asset
 	 splitAsset := asset
-	//  splitAsset = asset
 	 splitAsset.ID = splitAssetID	
 	 splitAsset.OwnerOrg = buyerOrgID
 	 splitAsset.Owner = buyerName
@@ -526,7 +526,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 updatedprivateasset = newprivateasset
 	 updatedprivateasset.Quantity = updatedprivateasset.Quantity - quantity
 
-	 newprivateasset.ID = splitAssetID
+	//  newprivateasset.ID = splitAssetID
 	 newprivateasset.Quantity = quantity
 
 	 newprivateassetJSON, _ := json.Marshal(newprivateasset)
@@ -585,6 +585,7 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 		 Price			:	price,
 		 Timestamp		: 	time.Unix(timestmp.Seconds, int64(timestmp.Nanos)),
 	 }
+
 	 ret := &assetReceipt
 	 receiptJSON, err := json.Marshal(assetReceipt)
 	 if err != nil {
@@ -605,7 +606,9 @@ func (s *SmartContract) Init(ctx contractapi.TransactionContextInterface) error 
 	 if err != nil {
 		 return nil,fmt.Errorf("failed to put private asset receipt for seller: %s", err.Error())
 	 }
+
 	 fmt.Println("in transfer 12")
+
 	 return ret, nil
  }
  
@@ -737,6 +740,7 @@ func (s *SmartContract) ReadCompleteAsset(ctx contractapi.TransactionContextInte
 	fmt.Println("pos 5") 
 	ret := &completeAsset
 	fmt.Println("pos 6") 
+	
 	return ret,nil
 }
 

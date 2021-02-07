@@ -1,23 +1,2 @@
-Error: failed to retrieve endorser client for queryinstalled: endorser client failed to connect to localhost:8051: failed to create new connection: connection error: desc = "transport: error while dialing: dial tcp 127.0.0.1:8051: connect: connection refused"
-Usage:
-  peer lifecycle chaincode queryinstalled [flags]
-
-Flags:
-      --connectionProfile string       The fully qualified path to the connection profile that provides the necessary connection information for the network. Note: currently only supported for providing peer connection information
-  -h, --help                           help for queryinstalled
-  -O, --output string                  The output format for query results. Default is human-readable plain-text. json is currently the only supported format.
-      --peerAddresses stringArray      The addresses of the peers to connect to
-      --targetPeer string              When using a connection profile, the name of the peer to target for this action
-      --tlsRootCertFiles stringArray   If TLS is enabled, the paths to the TLS root cert files of the peers to connect to. The order and number of certs specified should match the --peerAddresses flag
-
-Global Flags:
-      --cafile string                       Path to file containing PEM-encoded trusted certificate(s) for the ordering endpoint
-      --certfile string                     Path to file containing PEM-encoded X509 public key to use for mutual TLS communication with the orderer endpoint
-      --clientauth                          Use mutual TLS when communicating with the orderer endpoint
-      --connTimeout duration                Timeout for client to connect (default 3s)
-      --keyfile string                      Path to file containing PEM-encoded private key to use for mutual TLS communication with the orderer endpoint
-  -o, --orderer string                      Ordering service endpoint
-      --ordererTLSHostnameOverride string   The hostname override to use when validating the TLS connection to the orderer
-      --tls                                 Use TLS when communicating with the orderer endpoint
-      --tlsHandshakeTimeShift duration      The amount of time to shift backwards for certificate expiration checks during TLS handshakes with the orderer endpoint
-
+Installed chaincodes on peer:
+Package ID: fabasset_1:b890a616ca100a23ff7edfa98d33c2c0c9881297b0873e0108917903c7decbfd, Label: fabasset_1
